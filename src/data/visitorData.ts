@@ -1,0 +1,50 @@
+import { Visitor } from "@/types/visitor";
+
+
+export const visitorData: Visitor[] = [
+  {
+    id: 1,
+    name: "John Anderson",
+    company: "PT Maritime Solutions",
+    phone: "081234567890",
+    purpose: "Business Meeting",
+    division: "ASAHI",
+    pic: "HARNIFIRA",
+    checkIn: "08:30",
+    status: "Waiting",
+  },
+  {
+    id: 2,
+    name: "Michael Tan",
+    company: "Ocean Shipping Ltd",
+    phone: "081298765432",
+    purpose: "Document Delivery",
+    division: "ASDP",
+    pic: "DWI LAVENIA",
+    checkIn: "09:15",
+    status: "Waiting",
+  },
+  {
+    id: 3,
+    name: "David Lee",
+    company: "PT Nusantara Marine",
+    phone: "081377788899",
+    purpose: "Interview",
+    division: "CRUISE",
+    pic: "ALMUKAROM",
+    checkIn: "10:00",
+    status: "Completed",
+    checkOut: "11:15",
+  },
+  {
+    id: 4,
+    name: "Robert Smith",
+    company: "Global Maritime",
+    phone: "081234567890",
+    purpose: "Project Discussion",
+    division: "ASAHI",
+    pic: "HARNIFIRA",
+    checkIn: "11:30",
+    status: "Meeting",
+  },
+];

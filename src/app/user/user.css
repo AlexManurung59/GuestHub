@@ -1,0 +1,17 @@
+.user-badge {
+  padding: 10px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.user-menu-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.user-menu-grid a {
+  text-decoration: none;
+}

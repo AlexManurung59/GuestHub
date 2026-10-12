@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap');
+
+.heroContainer {
+  height: 100vh;
+  min-height: 560px;
+  overflow: hidden;
+}
+
+.heroImage {
+  object-fit: cover;
+  z-index: 0;
+}
+
+.overlay {
+  background: linear-gradient(
+    100deg,
+    rgba(10, 35, 66, 0.94) 0%,
+    rgba(10, 35, 66, 0.75) 32%,
+    rgba(10, 35, 66, 0.25) 60%,
+    rgba(10, 35, 66, 0.05) 80%
+  );
+  z-index: 1;
+}
+
+.logoBadge {
+  background: transparent;
+  z-index: 2;
+}
+
+.logoImage {
+  display: block;
+  width: 220px;
+  height: 80px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.heroContent {
+  z-index: 2;
+  color: #f5f3ee;
+}
+
+.languageControl {
+  z-index: 3;
+}
+
+.heroTitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+}
+
+.heroDescription {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(245, 243, 238, 0.85);
+  margin-bottom: 32px;
+  max-width: 420px;
+}
+
+.heroButton {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #f5f3ee;
+  background: #c8352e;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 4px;
+}
+
+
+.logoBadge {
+  position: absolute;
+  width: 72px;
+  height: 88px;
+  z-index: 2;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+.logoImage {
+  object-fit: contain;
+}
+
+.heroButton:hover {
+  background: #a82a24;
+  color: #f5f3ee;
+}
+
+.heroButton:focus-visible {
+  outline: 2px solid #f5f3ee;
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .logoBadge {
+    margin: 1rem !important;
+  }
+
+  .logoImage {
+    width: 170px;
+    height: 62px;
+  }
+
+  .overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 35, 66, 0.4) 0%,
+      rgba(10, 35, 66, 0.95) 60%
+    );
+  }
+}

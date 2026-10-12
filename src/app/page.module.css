@@ -1,0 +1,73 @@
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 4.5rem 1.25rem 2rem;
+  background: #eef4f7;
+  background-image: radial-gradient(circle at 10% 10%, rgba(25, 99, 133, 0.14), transparent 32%), linear-gradient(135deg, #f5f8f9, #e7f0f4);
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.78fr) minmax(0, 1.22fr);
+  width: min(100%, 980px);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid rgba(17, 61, 87, 0.1);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(16, 54, 78, 0.14);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  color: #f6fbfd;
+  background: linear-gradient(155deg, #0c4568, #092b49);
+}
+
+.intro img { width: 60px; height: 60px; margin-bottom: 1.5rem; object-fit: contain; }
+.eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; opacity: 0.7; }
+.intro h1 { margin: 0.7rem 0 1rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; }
+.intro p { max-width: 280px; margin: 0; color: rgba(246, 251, 253, 0.76); line-height: 1.65; }
+.formPanel { min-width: 0; padding: clamp(1.5rem, 2.6vw, 2.25rem); }
+.formHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+.sectionTag { color: #16739a; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.15em; }
+.formHeading h2 { margin: 0.45rem 0 0.35rem; color: #12364b; font-size: 1.65rem; }
+.formHeading p { margin: 0; color: #71818b; font-size: 0.92rem; }
+.backLink { flex: 0 0 auto; color: #16739a; font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+.backLink:hover { color: #0c4568; text-decoration: underline; }
+.formPanel label { color: #17384b; font-size: 0.88rem; font-weight: 700; }
+.formPanel input, .formPanel select { min-height: 44px; border-color: #d6e1e6; border-radius: 8px; }
+.formPanel input:focus, .formPanel select:focus { border-color: #16739a; box-shadow: 0 0 0 0.2rem rgba(22, 115, 154, 0.15); }
+.formPanel fieldset { min-width: 0; margin: 0; }
+.formPanel legend { float: none; width: auto; margin-bottom: 0.55rem; font-size: 0.88rem; }
+.visitorTypeOptions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+.visitorTypeOption { display: flex; align-items: center; gap: 0.7rem; min-width: 0; min-height: 56px; margin: 0; padding: 0.75rem 0.9rem; border: 1px solid #d6e1e6; border-radius: 10px; background: #fff; cursor: pointer; transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease; }
+.visitorTypeOption input { flex: 0 0 auto; width: 1rem; height: 1rem; min-height: 1rem; margin: 0; accent-color: #16739a; }
+.visitorTypeOptionSelected { border-color: #16739a; background: #f0f8fb; box-shadow: 0 0 0 2px rgba(22, 115, 154, 0.08); }
+.visitorTypeOption:focus-within { outline: 3px solid rgba(22, 115, 154, 0.18); outline-offset: 2px; }
+.submitButton { min-height: 46px; margin-top: 1rem; border: 0; border-radius: 8px; background: #d13b32; font-weight: 700; }
+.submitButton:hover { background: #b62f29; }
+
+.formPanel :global(.alert) { border: 0; border-radius: 10px; font-size: 0.88rem; line-height: 1.5; }
+
+@media (min-width: 701px) {
+  .page { display: grid; align-items: center; padding: 4.5rem 1.5rem 1.5rem; }
+}
+
+@media (max-width: 700px) {
+  .page { padding: 4.5rem 0.75rem 1rem; }
+  .shell { grid-template-columns: 1fr; }
+  .intro { min-height: auto; padding: 1.75rem 1.5rem 2rem; }
+  .intro img { margin-bottom: 1.25rem; }
+  .formPanel { padding: 1.75rem 1.25rem 2rem; }
+  .formHeading { display: block; margin-bottom: 1.5rem; }
+  .backLink { display: inline-block; margin-top: 0.9rem; }
+}
+
+@media (max-width: 420px) {
+  .visitorTypeOptions { grid-template-columns: 1fr; }
+}
