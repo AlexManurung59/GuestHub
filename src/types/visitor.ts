@@ -6,6 +6,9 @@ export type VisitorStatus =
 export interface Visitor {
   id:number;
   name: string;
+  visitorType?: "SEAFARER" | "GUEST" | null;
+  rank?: string | null;
+  position?: string | null;
   company: string;
   phone: string;
   purpose: string;

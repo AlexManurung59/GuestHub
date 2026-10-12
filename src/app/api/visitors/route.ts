@@ -2,6 +2,7 @@
 import { prisma } from "../../../../lib/prisma";
 import { NextResponse } from "next/server";
 import { getJakartaDate, getJakartaDateRange } from "@/lib/visitor-date";
+import { scrollRank } from "@/data/scroll";
 
 
 
@@ -109,6 +110,9 @@ export async function POST(request: Request) {
       "division",
       "purpose",
       "pic",
+      "visitorType",
+      "rank",
+      "position",
     ] as const;
     const hasInvalidTextField = textFields.some((field) => {
       const value = visitorInput[field];
@@ -132,6 +136,64 @@ export async function POST(request: Request) {
       );
     }
 
+    const visitorType = visitorInput.visitorType;
+    const rank = visitorInput.rank;
+    const position = visitorInput.position;
+    if (visitorType !== undefined) {
+      if (visitorType !== "SEAFARER" && visitorType !== "GUEST") {
+        return NextResponse.json(
+          { error: "Visitor type must be SEAFARER or GUEST" },
+          { status: 400 },
+        );
+      }
+
+      if (visitorType === "SEAFARER") {
+        if (
+          typeof rank !== "string" ||
+          !scrollRank.includes(rank.toUpperCase())
+        ) {
+          return NextResponse.json(
+            { error: "A valid seafarer rank is required" },
+            { status: 400 },
+          );
+        }
+        if (
+          rank.toUpperCase() === "OTHERS" &&
+          (typeof position !== "string" || !position.trim())
+        ) {
+          return NextResponse.json(
+            { error: "Position is required when rank is OTHERS" },
+            { status: 400 },
+          );
+        }
+        if (
+          rank.toUpperCase() !== "OTHERS" &&
+          typeof position === "string" &&
+          position.trim()
+        ) {
+          return NextResponse.json(
+            { error: "Position is only accepted when rank is OTHERS" },
+            { status: 400 },
+          );
+        }
+      } else if (typeof position !== "string" || !position.trim()) {
+        return NextResponse.json(
+          { error: "Position is required for guests" },
+          { status: 400 },
+        );
+      } else if (typeof rank === "string" && rank.trim()) {
+        return NextResponse.json(
+          { error: "Guests must not provide a seafarer rank" },
+          { status: 400 },
+        );
+      }
+    } else if (rank !== undefined || position !== undefined) {
+      return NextResponse.json(
+        { error: "Visitor type is required with rank or position" },
+        { status: 400 },
+      );
+    }
+
     const uppercaseField = (
       field: (typeof textFields)[number],
     ): string | null | undefined => {
@@ -150,12 +212,30 @@ export async function POST(request: Request) {
     const visitor = await prisma.visitor.create({
       data: {
         name: visitorInput.name.toUpperCase(),
-        company: uppercaseField("company"),
-        vessel: uppercaseField("vessel"),
+        company:
+          visitorType === "SEAFARER"
+            ? null
+            : uppercaseField("company"),
+        vessel:
+          visitorType === "SEAFARER" || visitorType === "GUEST"
+            ? null
+            : uppercaseField("vessel"),
         phone: uppercaseField("phone"),
         division: uppercaseField("division"),
         purpose: uppercaseField("purpose"),
         pic: uppercaseField("pic"),
+        visitorType:
+          visitorType === "SEAFARER" || visitorType === "GUEST"
+            ? visitorType
+            : null,
+        rank: visitorType === "SEAFARER" ? uppercaseField("rank") : null,
+        position:
+          visitorType === "GUEST" ||
+          (visitorType === "SEAFARER" &&
+            typeof rank === "string" &&
+            rank.toUpperCase() === "OTHERS")
+            ? uppercaseField("position")
+            : null,
         check_in: new Date(),
         status: "Waiting",
       },

@@ -149,12 +149,24 @@ async function handleExitAccount() {
       const response = await fetch("/api/visitors?date=today", {
         cache: "no-store",
       });
+      const data: unknown = await response.json();
 
       if (!response.ok) {
-        throw new Error("Failed to fetch visitors");
+        const errorMessage =
+          typeof data === "object" &&
+          data !== null &&
+          "details" in data &&
+          typeof data.details === "string"
+            ? data.details
+            : typeof data === "object" &&
+                data !== null &&
+                "error" in data &&
+                typeof data.error === "string"
+              ? data.error
+              : "Failed to fetch visitors";
+        throw new Error(errorMessage);
       }
 
-      const data: unknown = await response.json();
       let visitorData: unknown[];
       if (Array.isArray(data)) {
         visitorData = data;

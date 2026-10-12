@@ -4,17 +4,27 @@ import type { ChangeEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import DivisionPicFields from "@/components/DivisionPicFields";
+import { scrollRank } from "@/data/scroll";
 import { LanguageSwitcher, useLanguage } from "../language-provider";
 import styles from "../page.module.css";
 import type { Visitor } from "@/types/visitor";
 
+type RegistrationVisitorType = "SEAFARER" | "GUEST";
+
 type RegistrationVisitor = Omit<
   Visitor,
-  "id" | "checkIn" | "checkOut" | "status"
+  | "id"
+  | "checkIn"
+  | "checkOut"
+  | "status"
+  | "visitorType"
+  | "rank"
+  | "position"
 > & {
-  vessel: string;
   division: string;
   pic: string;
+  rank: string;
+  position: string;
 };
 
 // Submit / post
@@ -23,13 +33,14 @@ export default function RegisterPage() {
   const [visitor, setVisitor] = useState<RegistrationVisitor>({
     name: "",
     company: "",
-    vessel: "",
     purpose: "",
     phone: "",
     division: "",
     pic: "",
+    rank: "",
+    position: "",
   });
-  const [visitorType, setVisitorType] = useState<"company" | "sailor">("company");
+  const [visitorType, setVisitorType] = useState<RegistrationVisitorType | "">("");
   const [submitted, setSubmitted] = useState(false);
   const [showError, setShowError] = useState(false);
   const [visitorId,setVisitorId]=useState<number |null>(null);
@@ -44,13 +55,21 @@ export default function RegisterPage() {
     event.preventDefault();
     const requiredValues = [
       visitor.name,
-      visitorType === "company" ? visitor.company : visitor.vessel,
+      ...(visitorType === "GUEST" ? [visitor.company] : []),
       visitor.phone,
       visitor.purpose,
       visitor.division,
       visitor.pic,
     ];
-    const isComplete = requiredValues.every((value) => value.trim() !== "");
+    const hasRequiredRoleDetails =
+      visitorType === "GUEST"
+        ? Boolean(visitor.position.trim())
+        : visitorType === "SEAFARER" &&
+          Boolean(visitor.rank) &&
+          (visitor.rank !== "OTHERS" || Boolean(visitor.position.trim()));
+    const isComplete =
+      requiredValues.every((value) => value.trim() !== "") &&
+      hasRequiredRoleDetails;
     if(!isComplete){
       setShowError(true);
       setSubmitted(false);
@@ -63,7 +82,20 @@ export default function RegisterPage() {
         headers:{
           "Content-Type":"application/json",
         },
-        body:JSON.stringify(visitor),
+        body: JSON.stringify({
+          name: visitor.name,
+          company: visitorType === "GUEST" ? visitor.company : null,
+          phone: visitor.phone,
+          purpose: visitor.purpose,
+          division: visitor.division,
+          pic: visitor.pic,
+          visitorType,
+          rank: visitorType === "SEAFARER" ? visitor.rank : null,
+          position:
+            visitorType === "GUEST" || visitor.rank === "OTHERS"
+              ? visitor.position
+              : null,
+        }),
       });
       const data = await response.json();
       if(!response.ok){
@@ -81,13 +113,14 @@ console.log("Visitor Successfully created:",data);
       setVisitor({
         name: "",
         company: "",
-        vessel: "",
         purpose: "",
         phone: "",
         division: "",
         pic: "",
+        rank: "",
+        position: "",
       });
-      setVisitorType("company");
+      setVisitorType("");
 
     }catch(error){ 
       console.error("POST Error:",error);
@@ -158,7 +191,7 @@ console.log("Visitor Successfully created:",data);
                   <div className={styles.visitorTypeOptions}>
                     <label
                       className={`${styles.visitorTypeOption} ${
-                        visitorType === "company"
+                        visitorType === "GUEST"
                           ? styles.visitorTypeOptionSelected
                           : ""
                       }`}
@@ -166,20 +199,21 @@ console.log("Visitor Successfully created:",data);
                       <input
                         className="form-check-input"
                         type="radio"
-                        id="visitor-type-company"
+                        id="visitor-type-guest"
                         name="visitorType"
-                        value="company"
-                        checked={visitorType === "company"}
+                        value="GUEST"
+                        checked={visitorType === "GUEST"}
                         onChange={() => {
-                          setVisitorType("company");
-                          updateVisitor("vessel", "");
+                          setVisitorType("GUEST");
+                          updateVisitor("rank", "");
+                          updateVisitor("position", "");
                         }}
                       />
-                      <span>{t("companyVisitor")}</span>
+                      <span>{t("guestVisitor")}</span>
                     </label>
                     <label
                       className={`${styles.visitorTypeOption} ${
-                        visitorType === "sailor"
+                        visitorType === "SEAFARER"
                           ? styles.visitorTypeOptionSelected
                           : ""
                       }`}
@@ -187,46 +221,84 @@ console.log("Visitor Successfully created:",data);
                       <input
                         className="form-check-input"
                         type="radio"
-                        id="visitor-type-sailor"
+                        id="visitor-type-seafarer"
                         name="visitorType"
-                        value="sailor"
-                        checked={visitorType === "sailor"}
+                        value="SEAFARER"
+                        checked={visitorType === "SEAFARER"}
                         onChange={() => {
-                          setVisitorType("sailor");
+                          setVisitorType("SEAFARER");
                           updateVisitor("company", "");
+                          updateVisitor("position", "");
                         }}
                       />
-                      <span>{t("sailorVisitor")}</span>
+                      <span>{t("seafarerVisitor")}</span>
                     </label>
                   </div>
                 </fieldset>
               </div>
-              <div className="col-12">
-                <label
-                  htmlFor={visitorType === "company" ? "company" : "vessel"}
-                  className="form-label"
-                >
-                  {visitorType === "company" ? t("company") : t("vessel")}
-                </label>
-                <input
-                  type="text"
-                  id={visitorType === "company" ? "company" : "vessel"}
-                  className="form-control"
-                  value={visitorType === "company" ? visitor.company : visitor.vessel}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                    updateVisitor(
-                      visitorType === "company" ? "company" : "vessel",
-                      event.target.value,
-                    )
-                  }
-                  placeholder={
-                    visitorType === "company"
-                      ? t("companyPlaceholder")
-                      : t("vesselPlaceholder")
-                  }
-                  required
-                />
-              </div>
+              {visitorType === "GUEST" && (
+                <div className="col-12">
+                  <label htmlFor="company" className="form-label">
+                    {t("company")}
+                  </label>
+                  <input
+                    type="text"
+                    id="company"
+                    className="form-control"
+                    value={visitor.company}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      updateVisitor("company", event.target.value)
+                    }
+                    placeholder={t("companyPlaceholder")}
+                    required
+                  />
+                </div>
+              )}
+              {visitorType === "SEAFARER" && (
+                <div className="col-12">
+                  <label htmlFor="rank" className="form-label">
+                    {t("rank")}
+                  </label>
+                  <select
+                    id="rank"
+                    className="form-select"
+                    value={visitor.rank}
+                    onChange={(event) => {
+                      updateVisitor("rank", event.target.value);
+                      if (event.target.value !== "OTHERS") {
+                        updateVisitor("position", "");
+                      }
+                    }}
+                    required
+                  >
+                    <option value="">{t("selectRank")}</option>
+                    {scrollRank.map((rank) => (
+                      <option key={rank} value={rank}>
+                        {rank}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              {(visitorType === "GUEST" ||
+                (visitorType === "SEAFARER" && visitor.rank === "OTHERS")) && (
+                <div className="col-12">
+                  <label htmlFor="position" className="form-label">
+                    {t("position")}
+                  </label>
+                  <input
+                    id="position"
+                    type="text"
+                    className="form-control"
+                    value={visitor.position}
+                    onChange={(event) =>
+                      updateVisitor("position", event.target.value)
+                    }
+                    placeholder={t("positionPlaceholder")}
+                    required
+                  />
+                </div>
+              )}
               <div className="col-md-6">
                 <label htmlFor="purpose" className="form-label">
                   {t("purpose")}

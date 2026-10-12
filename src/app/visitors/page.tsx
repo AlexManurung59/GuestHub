@@ -6,6 +6,9 @@ import { VISITOR_REFRESH_INTERVAL_MS } from "@/components/VisitorReminder";
 interface Visitor {
   id: number;
   name: string;
+  visitorType: string | null;
+  rank: string | null;
+  position: string | null;
   company: string | null;
   vessel: string | null;
   phone: string | null;
@@ -24,6 +27,9 @@ function isVisitor(value: unknown): value is Visitor {
   return (
     typeof visitor.id === "number" &&
     typeof visitor.name === "string" &&
+    (typeof visitor.visitorType === "string" || visitor.visitorType === null) &&
+    (typeof visitor.rank === "string" || visitor.rank === null) &&
+    (typeof visitor.position === "string" || visitor.position === null) &&
     (typeof visitor.company === "string" || visitor.company === null) &&
     (typeof visitor.vessel === "string" || visitor.vessel === null) &&
     (typeof visitor.phone === "string" || visitor.phone === null) &&
@@ -127,6 +133,12 @@ export default function VisitorsPage() {
               Company:{visitor.company}
               <br />
               Vessel:{visitor.vessel}
+              <br />
+              Visitor type:{visitor.visitorType}
+              <br />
+              Rank:{visitor.rank}
+              <br />
+              Position:{visitor.position}
               <br />
               Division:{visitor.division}
               <br />

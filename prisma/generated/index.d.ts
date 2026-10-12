@@ -1096,6 +1096,9 @@ export namespace Prisma {
     name: string | null
     company: string | null
     vessel: string | null
+    visitorType: string | null
+    rank: string | null
+    position: string | null
     phone: string | null
     division: string | null
     purpose: string | null
@@ -1111,6 +1114,9 @@ export namespace Prisma {
     name: string | null
     company: string | null
     vessel: string | null
+    visitorType: string | null
+    rank: string | null
+    position: string | null
     phone: string | null
     division: string | null
     purpose: string | null
@@ -1126,6 +1132,9 @@ export namespace Prisma {
     name: number
     company: number
     vessel: number
+    visitorType: number
+    rank: number
+    position: number
     phone: number
     division: number
     purpose: number
@@ -1151,6 +1160,9 @@ export namespace Prisma {
     name?: true
     company?: true
     vessel?: true
+    visitorType?: true
+    rank?: true
+    position?: true
     phone?: true
     division?: true
     purpose?: true
@@ -1166,6 +1178,9 @@ export namespace Prisma {
     name?: true
     company?: true
     vessel?: true
+    visitorType?: true
+    rank?: true
+    position?: true
     phone?: true
     division?: true
     purpose?: true
@@ -1181,6 +1196,9 @@ export namespace Prisma {
     name?: true
     company?: true
     vessel?: true
+    visitorType?: true
+    rank?: true
+    position?: true
     phone?: true
     division?: true
     purpose?: true
@@ -1283,6 +1301,9 @@ export namespace Prisma {
     name: string
     company: string | null
     vessel: string | null
+    visitorType: string | null
+    rank: string | null
+    position: string | null
     phone: string | null
     division: string | null
     purpose: string | null
@@ -1317,6 +1338,9 @@ export namespace Prisma {
     name?: boolean
     company?: boolean
     vessel?: boolean
+    visitorType?: boolean
+    rank?: boolean
+    position?: boolean
     phone?: boolean
     division?: boolean
     purpose?: boolean
@@ -1334,6 +1358,9 @@ export namespace Prisma {
     name?: boolean
     company?: boolean
     vessel?: boolean
+    visitorType?: boolean
+    rank?: boolean
+    position?: boolean
     phone?: boolean
     division?: boolean
     purpose?: boolean
@@ -1344,7 +1371,7 @@ export namespace Prisma {
     created_at?: boolean
   }
 
-  export type VisitorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "company" | "vessel" | "phone" | "division" | "purpose" | "pic" | "check_in" | "check_out" | "status" | "created_at", ExtArgs["result"]["visitor"]>
+  export type VisitorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "company" | "vessel" | "visitorType" | "rank" | "position" | "phone" | "division" | "purpose" | "pic" | "check_in" | "check_out" | "status" | "created_at", ExtArgs["result"]["visitor"]>
 
   export type $VisitorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Visitor"
@@ -1354,6 +1381,9 @@ export namespace Prisma {
       name: string
       company: string | null
       vessel: string | null
+      visitorType: string | null
+      rank: string | null
+      position: string | null
       phone: string | null
       division: string | null
       purpose: string | null
@@ -1735,6 +1765,9 @@ export namespace Prisma {
     readonly name: FieldRef<"Visitor", 'String'>
     readonly company: FieldRef<"Visitor", 'String'>
     readonly vessel: FieldRef<"Visitor", 'String'>
+    readonly visitorType: FieldRef<"Visitor", 'String'>
+    readonly rank: FieldRef<"Visitor", 'String'>
+    readonly position: FieldRef<"Visitor", 'String'>
     readonly phone: FieldRef<"Visitor", 'String'>
     readonly division: FieldRef<"Visitor", 'String'>
     readonly purpose: FieldRef<"Visitor", 'String'>
@@ -3971,6 +4004,9 @@ export namespace Prisma {
     name: 'name',
     company: 'company',
     vessel: 'vessel',
+    visitorType: 'visitorType',
+    rank: 'rank',
+    position: 'position',
     phone: 'phone',
     division: 'division',
     purpose: 'purpose',
@@ -4029,6 +4065,9 @@ export namespace Prisma {
     name: 'name',
     company: 'company',
     vessel: 'vessel',
+    visitorType: 'visitorType',
+    rank: 'rank',
+    position: 'position',
     phone: 'phone',
     division: 'division',
     purpose: 'purpose',
@@ -4106,6 +4145,9 @@ export namespace Prisma {
     name?: StringFilter<"Visitor"> | string
     company?: StringNullableFilter<"Visitor"> | string | null
     vessel?: StringNullableFilter<"Visitor"> | string | null
+    visitorType?: StringNullableFilter<"Visitor"> | string | null
+    rank?: StringNullableFilter<"Visitor"> | string | null
+    position?: StringNullableFilter<"Visitor"> | string | null
     phone?: StringNullableFilter<"Visitor"> | string | null
     division?: StringNullableFilter<"Visitor"> | string | null
     purpose?: StringNullableFilter<"Visitor"> | string | null
@@ -4121,6 +4163,9 @@ export namespace Prisma {
     name?: SortOrder
     company?: SortOrderInput | SortOrder
     vessel?: SortOrderInput | SortOrder
+    visitorType?: SortOrderInput | SortOrder
+    rank?: SortOrderInput | SortOrder
+    position?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     division?: SortOrderInput | SortOrder
     purpose?: SortOrderInput | SortOrder
@@ -4140,6 +4185,9 @@ export namespace Prisma {
     name?: StringFilter<"Visitor"> | string
     company?: StringNullableFilter<"Visitor"> | string | null
     vessel?: StringNullableFilter<"Visitor"> | string | null
+    visitorType?: StringNullableFilter<"Visitor"> | string | null
+    rank?: StringNullableFilter<"Visitor"> | string | null
+    position?: StringNullableFilter<"Visitor"> | string | null
     phone?: StringNullableFilter<"Visitor"> | string | null
     division?: StringNullableFilter<"Visitor"> | string | null
     purpose?: StringNullableFilter<"Visitor"> | string | null
@@ -4155,6 +4203,9 @@ export namespace Prisma {
     name?: SortOrder
     company?: SortOrderInput | SortOrder
     vessel?: SortOrderInput | SortOrder
+    visitorType?: SortOrderInput | SortOrder
+    rank?: SortOrderInput | SortOrder
+    position?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     division?: SortOrderInput | SortOrder
     purpose?: SortOrderInput | SortOrder
@@ -4178,6 +4229,9 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Visitor"> | string
     company?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
     vessel?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    visitorType?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    rank?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
+    position?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
     division?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
     purpose?: StringNullableWithAggregatesFilter<"Visitor"> | string | null
@@ -4316,6 +4370,9 @@ export namespace Prisma {
     name: string
     company?: string | null
     vessel?: string | null
+    visitorType?: string | null
+    rank?: string | null
+    position?: string | null
     phone?: string | null
     division?: string | null
     purpose?: string | null
@@ -4331,6 +4388,9 @@ export namespace Prisma {
     name: string
     company?: string | null
     vessel?: string | null
+    visitorType?: string | null
+    rank?: string | null
+    position?: string | null
     phone?: string | null
     division?: string | null
     purpose?: string | null
@@ -4345,6 +4405,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     company?: NullableStringFieldUpdateOperationsInput | string | null
     vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    visitorType?: NullableStringFieldUpdateOperationsInput | string | null
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     division?: NullableStringFieldUpdateOperationsInput | string | null
     purpose?: NullableStringFieldUpdateOperationsInput | string | null
@@ -4360,6 +4423,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     company?: NullableStringFieldUpdateOperationsInput | string | null
     vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    visitorType?: NullableStringFieldUpdateOperationsInput | string | null
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     division?: NullableStringFieldUpdateOperationsInput | string | null
     purpose?: NullableStringFieldUpdateOperationsInput | string | null
@@ -4375,6 +4441,9 @@ export namespace Prisma {
     name: string
     company?: string | null
     vessel?: string | null
+    visitorType?: string | null
+    rank?: string | null
+    position?: string | null
     phone?: string | null
     division?: string | null
     purpose?: string | null
@@ -4389,6 +4458,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     company?: NullableStringFieldUpdateOperationsInput | string | null
     vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    visitorType?: NullableStringFieldUpdateOperationsInput | string | null
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     division?: NullableStringFieldUpdateOperationsInput | string | null
     purpose?: NullableStringFieldUpdateOperationsInput | string | null
@@ -4404,6 +4476,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     company?: NullableStringFieldUpdateOperationsInput | string | null
     vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    visitorType?: NullableStringFieldUpdateOperationsInput | string | null
+    rank?: NullableStringFieldUpdateOperationsInput | string | null
+    position?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     division?: NullableStringFieldUpdateOperationsInput | string | null
     purpose?: NullableStringFieldUpdateOperationsInput | string | null
@@ -4630,6 +4705,9 @@ export namespace Prisma {
     name?: SortOrder
     company?: SortOrder
     vessel?: SortOrder
+    visitorType?: SortOrder
+    rank?: SortOrder
+    position?: SortOrder
     phone?: SortOrder
     division?: SortOrder
     purpose?: SortOrder
@@ -4649,6 +4727,9 @@ export namespace Prisma {
     name?: SortOrder
     company?: SortOrder
     vessel?: SortOrder
+    visitorType?: SortOrder
+    rank?: SortOrder
+    position?: SortOrder
     phone?: SortOrder
     division?: SortOrder
     purpose?: SortOrder
@@ -4664,6 +4745,9 @@ export namespace Prisma {
     name?: SortOrder
     company?: SortOrder
     vessel?: SortOrder
+    visitorType?: SortOrder
+    rank?: SortOrder
+    position?: SortOrder
     phone?: SortOrder
     division?: SortOrder
     purpose?: SortOrder

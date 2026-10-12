@@ -14,6 +14,33 @@ export const scrollDivision = [
 'OTHER'
 ];
 
+export const scrollRank = [
+    'MASTER',
+    'CHIEF OFFICER',
+    '1ST OFFICER',
+    '2ND OFFICER',
+    '3RD OFFICER',
+    '4TH OFFICER',
+    '5TH OFFICER',
+    'CHIEF ENGINEER',
+    '1ST ENGINEER',
+    '2ND ENGINEER',
+    '3RD ENGINEER',
+    '4TH ENGINEER',
+    '5TH ENGINEER',
+    'BOASTWAIN',
+    'ABLE SEAMAN',
+    'ORDINARY SEAMAN',
+    'NO. 1 OILER',
+    'FITTER',
+    'OILER',
+    'WIPER',
+    'CHIEF COOK',
+    'COOK',
+    'MESSMAN',
+    'OTHERS',
+]
+
 export const scrollPIC = [
     "HARNIFIRA",
     "DWI LAVENIA",

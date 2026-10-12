@@ -14,12 +14,14 @@ type TranslationKey =
   | "fullName"
   | "fullNamePlaceholder"
   | "visitorType"
-  | "companyVisitor"
-  | "sailorVisitor"
+  | "guestVisitor"
+  | "seafarerVisitor"
   | "company"
   | "companyPlaceholder"
-  | "vessel"
-  | "vesselPlaceholder"
+  | "rank"
+  | "selectRank"
+  | "position"
+  | "positionPlaceholder"
   | "purpose"
   | "purposePlaceholder"
   | "phone"
@@ -47,12 +49,14 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     fullNamePlaceholder: "Masukkan nama lengkap",
     loginAsUser:"Masuk sebagai user",
     visitorType: "Jenis pengunjung",
-    companyVisitor: "Perusahaan",
-    sailorVisitor: "Pelaut",
+    guestVisitor: "Tamu",
+    seafarerVisitor: "Pelaut",
     company: "Nama perusahaan / instansi",
     companyPlaceholder: "Masukkan nama perusahaan / instansi",
-    vessel: "Nama kapal",
-    vesselPlaceholder: "Masukkan nama kapal",
+    rank: "Rank",
+    selectRank: "Pilih rank",
+    position: "Jabatan",
+    positionPlaceholder: "Masukkan jabatan Anda",
     purpose: "Keperluan",
     purposePlaceholder: "Masukkan keperluan kunjungan",
     phone: "Nomor HP",
@@ -79,12 +83,14 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     fullName: "Full Name",
     fullNamePlaceholder: "Enter your full name",
     visitorType: "Visitor type",
-    companyVisitor: "Company",
-    sailorVisitor: "Seafarer",
+    guestVisitor: "Guest",
+    seafarerVisitor: "Seafarer",
     company: "Company / institution name",
     companyPlaceholder: "Enter your company or institution name",
-    vessel: "Vessel name",
-    vesselPlaceholder: "Enter the vessel name",
+    rank: "Rank",
+    selectRank: "Select rank",
+    position: "Position",
+    positionPlaceholder: "Enter your position",
     purpose: "Purpose",
     purposePlaceholder: "Enter the purpose",
     phone: "Phone Number",
