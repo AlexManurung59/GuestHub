@@ -91,10 +91,39 @@ if(!allowedStatuses.includes(status)){
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const body: unknown = await request.json();
+
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json(
+        { error: "A visitor object is required" },
+        { status: 400 },
+      );
+    }
+
+    const visitorInput = body as Record<string, unknown>;
+    const textFields = [
+      "name",
+      "company",
+      "vessel",
+      "phone",
+      "division",
+      "purpose",
+      "pic",
+    ] as const;
+    const hasInvalidTextField = textFields.some((field) => {
+      const value = visitorInput[field];
+      return value !== undefined && value !== null && typeof value !== "string";
+    });
+
+    if (hasInvalidTextField) {
+      return NextResponse.json(
+        { error: "Visitor fields must be strings" },
+        { status: 400 },
+      );
+    }
 
     //Validate required field
-    if (!body.name) {
+    if (typeof visitorInput.name !== "string" || !visitorInput.name) {
       return NextResponse.json(
         {
           error: "Name is required",
@@ -103,16 +132,30 @@ export async function POST(request: Request) {
       );
     }
 
+    const uppercaseField = (
+      field: (typeof textFields)[number],
+    ): string | null | undefined => {
+      const value = visitorInput[field];
+      if (value === undefined || value === null) {
+        return value;
+      }
+
+      if (typeof value !== "string") {
+        throw new TypeError(`Visitor field "${field}" must be a string`);
+      }
+
+      return value.toUpperCase();
+    };
 
     const visitor = await prisma.visitor.create({
       data: {
-        name: body.name,
-        company: body.company,
-        vessel: body.vessel,
-        phone: body.phone,
-        division: body.division,
-        purpose: body.purpose,
-        pic: body.pic,
+        name: visitorInput.name.toUpperCase(),
+        company: uppercaseField("company"),
+        vessel: uppercaseField("vessel"),
+        phone: uppercaseField("phone"),
+        division: uppercaseField("division"),
+        purpose: uppercaseField("purpose"),
+        pic: uppercaseField("pic"),
         check_in: new Date(),
         status: "Waiting",
       },

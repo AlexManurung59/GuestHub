@@ -35,7 +35,7 @@ export default function RegisterPage() {
   const [visitorId,setVisitorId]=useState<number |null>(null);
 
   function updateVisitor(field: keyof RegistrationVisitor, value: string) {
-    setVisitor((current) => ({ ...current, [field]: value }));
+    setVisitor((current) => ({ ...current, [field]: value.toUpperCase() }));
     setSubmitted(false);
     setShowError(false);
   }
