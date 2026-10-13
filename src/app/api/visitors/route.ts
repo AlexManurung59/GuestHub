@@ -2,7 +2,6 @@
 import { prisma } from "../../../../lib/prisma";
 import { NextResponse } from "next/server";
 import { getJakartaDate, getJakartaDateRange } from "@/lib/visitor-date";
-import { scrollRank } from "@/data/scroll";
 
 
 
@@ -92,42 +91,10 @@ if(!allowedStatuses.includes(status)){
 
 export async function POST(request: Request) {
   try {
-    const body: unknown = await request.json();
-
-    if (body === null || typeof body !== "object" || Array.isArray(body)) {
-      return NextResponse.json(
-        { error: "A visitor object is required" },
-        { status: 400 },
-      );
-    }
-
-    const visitorInput = body as Record<string, unknown>;
-    const textFields = [
-      "name",
-      "company",
-      "vessel",
-      "phone",
-      "division",
-      "purpose",
-      "pic",
-      "visitorType",
-      "rank",
-      "position",
-    ] as const;
-    const hasInvalidTextField = textFields.some((field) => {
-      const value = visitorInput[field];
-      return value !== undefined && value !== null && typeof value !== "string";
-    });
-
-    if (hasInvalidTextField) {
-      return NextResponse.json(
-        { error: "Visitor fields must be strings" },
-        { status: 400 },
-      );
-    }
+    const body = await request.json();
 
     //Validate required field
-    if (typeof visitorInput.name !== "string" || !visitorInput.name) {
+    if (!body.name) {
       return NextResponse.json(
         {
           error: "Name is required",
@@ -136,106 +103,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const visitorType = visitorInput.visitorType;
-    const rank = visitorInput.rank;
-    const position = visitorInput.position;
-    if (visitorType !== undefined) {
-      if (visitorType !== "SEAFARER" && visitorType !== "GUEST") {
-        return NextResponse.json(
-          { error: "Visitor type must be SEAFARER or GUEST" },
-          { status: 400 },
-        );
-      }
-
-      if (visitorType === "SEAFARER") {
-        if (
-          typeof rank !== "string" ||
-          !scrollRank.includes(rank.toUpperCase())
-        ) {
-          return NextResponse.json(
-            { error: "A valid seafarer rank is required" },
-            { status: 400 },
-          );
-        }
-        if (
-          rank.toUpperCase() === "OTHERS" &&
-          (typeof position !== "string" || !position.trim())
-        ) {
-          return NextResponse.json(
-            { error: "Position is required when rank is OTHERS" },
-            { status: 400 },
-          );
-        }
-        if (
-          rank.toUpperCase() !== "OTHERS" &&
-          typeof position === "string" &&
-          position.trim()
-        ) {
-          return NextResponse.json(
-            { error: "Position is only accepted when rank is OTHERS" },
-            { status: 400 },
-          );
-        }
-      } else if (typeof position !== "string" || !position.trim()) {
-        return NextResponse.json(
-          { error: "Position is required for guests" },
-          { status: 400 },
-        );
-      } else if (typeof rank === "string" && rank.trim()) {
-        return NextResponse.json(
-          { error: "Guests must not provide a seafarer rank" },
-          { status: 400 },
-        );
-      }
-    } else if (rank !== undefined || position !== undefined) {
-      return NextResponse.json(
-        { error: "Visitor type is required with rank or position" },
-        { status: 400 },
-      );
-    }
-
-    const uppercaseField = (
-      field: (typeof textFields)[number],
-    ): string | null | undefined => {
-      const value = visitorInput[field];
-      if (value === undefined || value === null) {
-        return value;
-      }
-
-      if (typeof value !== "string") {
-        throw new TypeError(`Visitor field "${field}" must be a string`);
-      }
-
-      return value.toUpperCase();
-    };
 
     const visitor = await prisma.visitor.create({
       data: {
-        name: visitorInput.name.toUpperCase(),
-        company:
-          visitorType === "SEAFARER"
-            ? null
-            : uppercaseField("company"),
-        vessel:
-          visitorType === "SEAFARER" || visitorType === "GUEST"
-            ? null
-            : uppercaseField("vessel"),
-        phone: uppercaseField("phone"),
-        division: uppercaseField("division"),
-        purpose: uppercaseField("purpose"),
-        pic: uppercaseField("pic"),
-        visitorType:
-          visitorType === "SEAFARER" || visitorType === "GUEST"
-            ? visitorType
-            : null,
-        rank: visitorType === "SEAFARER" ? uppercaseField("rank") : null,
-        position:
-          visitorType === "GUEST" ||
-          (visitorType === "SEAFARER" &&
-            typeof rank === "string" &&
-            rank.toUpperCase() === "OTHERS")
-            ? uppercaseField("position")
-            : null,
+        name: body.name,
+        company: body.company,
+        vessel: body.vessel,
+        phone: body.phone,
+        division: body.division,
+        purpose: body.purpose,
+        pic: body.pic,
         check_in: new Date(),
         status: "Waiting",
       },
