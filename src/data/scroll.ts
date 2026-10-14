@@ -47,7 +47,8 @@ export const scrollPIC = [
     "ALMUKAROM",
     "DWI DAVID",
     "ENDAH NUR WIDHIANINGSIH",
-    "CHINDY"
+    "CHINDY",
+    "ARI WIBOWO"
 ];
 
 export function getPICByDivision(division: string): string[] {
