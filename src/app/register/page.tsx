@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { ChangeEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import DivisionPicFields from "@/components/DivisionPicFields";
 import { scrollRank } from "@/data/scroll";
 import { LanguageSwitcher, useLanguage } from "../language-provider";
@@ -29,6 +30,7 @@ type RegistrationVisitor = Omit<
 
 // Submit / post
 export default function RegisterPage() {
+  const router = useRouter();
   const { t } = useLanguage();
   const [visitor, setVisitor] = useState<RegistrationVisitor>({
     name: "",
@@ -46,7 +48,10 @@ export default function RegisterPage() {
   const [visitorId,setVisitorId]=useState<number |null>(null);
 
   function updateVisitor(field: keyof RegistrationVisitor, value: string) {
-    setVisitor((current) => ({ ...current, [field]: value.toUpperCase() }));
+    setVisitor((current) => ({
+      ...current,
+      [field]: field === "purpose" ? value : value.toUpperCase(),
+    }));
     setSubmitted(false);
     setShowError(false);
   }
@@ -86,7 +91,7 @@ export default function RegisterPage() {
           name: visitor.name,
           company: visitorType === "GUEST" ? visitor.company : null,
           phone: visitor.phone,
-          purpose: visitor.purpose,
+          purpose: visitor.purpose.toUpperCase(),
           division: visitor.division,
           pic: visitor.pic,
           visitorType,
@@ -109,6 +114,7 @@ console.log("Visitor Successfully created:",data);
       setVisitorId(data.id);
       setShowError(false);
       setSubmitted(true);
+      router.push(`/?registered=1&visitorId=${encodeURIComponent(data.id)}`);
 
       setVisitor({
         name: "",
@@ -191,28 +197,6 @@ console.log("Visitor Successfully created:",data);
                   <div className={styles.visitorTypeOptions}>
                     <label
                       className={`${styles.visitorTypeOption} ${
-                        visitorType === "GUEST"
-                          ? styles.visitorTypeOptionSelected
-                          : ""
-                      }`}
-                    >
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        id="visitor-type-guest"
-                        name="visitorType"
-                        value="GUEST"
-                        checked={visitorType === "GUEST"}
-                        onChange={() => {
-                          setVisitorType("GUEST");
-                          updateVisitor("rank", "");
-                          updateVisitor("position", "");
-                        }}
-                      />
-                      <span>{t("guestVisitor")}</span>
-                    </label>
-                    <label
-                      className={`${styles.visitorTypeOption} ${
                         visitorType === "SEAFARER"
                           ? styles.visitorTypeOptionSelected
                           : ""
@@ -232,6 +216,28 @@ console.log("Visitor Successfully created:",data);
                         }}
                       />
                       <span>{t("seafarerVisitor")}</span>
+                    </label>
+                    <label
+                      className={`${styles.visitorTypeOption} ${
+                        visitorType === "GUEST"
+                          ? styles.visitorTypeOptionSelected
+                          : ""
+                      }`}
+                    >
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        id="visitor-type-guest"
+                        name="visitorType"
+                        value="GUEST"
+                        checked={visitorType === "GUEST"}
+                        onChange={() => {
+                          setVisitorType("GUEST");
+                          updateVisitor("rank", "");
+                          updateVisitor("position", "");
+                        }}
+                      />
+                      <span>{t("guestVisitor")}</span>
                     </label>
                   </div>
                 </fieldset>
@@ -286,6 +292,11 @@ console.log("Visitor Successfully created:",data);
                   <label htmlFor="position" className="form-label">
                     {t("position")}
                   </label>
+                  {visitorType === "SEAFARER" && visitor.rank === "OTHERS" && (
+                    <p className="form-text">
+                      Masukkan jabatan pelaut jika rank tidak tersedia di daftar.
+                    </p>
+                  )}
                   <input
                     id="position"
                     type="text"
@@ -310,6 +321,7 @@ console.log("Visitor Successfully created:",data);
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     updateVisitor("purpose", e.target.value)
                   }
+                  style={{ textTransform: "uppercase" }}
                   placeholder={t("purposePlaceholder")}
                   required
                 />

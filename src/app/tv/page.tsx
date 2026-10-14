@@ -19,6 +19,8 @@ interface Visitor {
   name: string;
   company: string | null;
   vessel: string | null;
+  rank: string | null;
+  position: string | null;
   phone: string | null;
   division: string | null;
   purpose: string | null;
@@ -590,7 +592,9 @@ export default function TvPage() {
                             </h3>
 
                             <div className="visitor-company">
-                              {visitor.company}
+                              {visitor.rank && visitor.rank !== "OTHERS"
+                                ? visitor.rank
+                                : visitor.position}
                             </div>
 
                           </div>
@@ -606,19 +610,7 @@ export default function TvPage() {
                           <li className="mb-3 d-flex justify-content-between">
 
                             <span className="label">
-                              Phone
-                            </span>
-
-                            <span className="value">
-                              {visitor.phone}
-                            </span>
-
-                          </li>
-
-                          <li className="mb-3 d-flex justify-content-between">
-
-                            <span className="label">
-                              Division
+                              DIVISION
                             </span>
 
                             <span className="value">
@@ -635,6 +627,18 @@ export default function TvPage() {
 
                             <span className="value">
                               {visitor.pic}
+                            </span>
+
+                          </li>
+
+                          <li className="mb-3 d-flex justify-content-between">
+
+                            <span className="label">
+                              CONTACT
+                            </span>
+
+                            <span className="value">
+                              {visitor.phone}
                             </span>
 
                           </li>
@@ -1104,19 +1108,21 @@ export default function TvPage() {
           color:
             rgba(255,255,255,0.6);
 
-          font-size: 0.85rem;
+          font-size: 1.05rem;
         }
 
 
         .alarm-details strong {
           color: #fff;
 
-          font-size: 1rem;
+          font-size: 1.3rem;
         }
 
 
         .alarm-message {
           color: #fff;
+
+          font-size: 1.15rem;
 
           font-weight: 600;
 
@@ -1671,9 +1677,17 @@ export default function TvPage() {
             text-align: left;
           }
 
+          .alarm-details span {
+            font-size: 1rem;
+          }
+
+          .alarm-details strong {
+            font-size: 1.15rem;
+          }
+
 
           .alarm-message {
-            font-size: 0.9rem;
+            font-size: 1.05rem;
           }
 
         }

@@ -8,9 +8,9 @@ type TranslationKey =
   | "heroTitle"
   | "heroDescription"
   | "registerNow"
+  | "registrationComplete"
   | "visitorRegistration"
   | "welcome"
-  | "loginAsUser"
   | "fullName"
   | "fullNamePlaceholder"
   | "visitorType"
@@ -43,11 +43,11 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     heroTitle: "Selamat datang di",
     heroDescription: "Silakan daftar kunjungan Anda sebelum melanjutkan ke area kami.",
     registerNow: "Daftar Sekarang",
+    registrationComplete: "Registrasi berhasil. Nomor visitor Anda:",
     visitorRegistration: "Registrasi Pengunjung",
     welcome: "Selamat datang di MCS Internasional. Silakan daftarkan kunjungan Anda.",
     fullName: "Nama Lengkap",
     fullNamePlaceholder: "Masukkan nama lengkap",
-    loginAsUser:"Masuk sebagai user",
     visitorType: "Jenis pengunjung",
     guestVisitor: "Tamu",
     seafarerVisitor: "Pelaut",
@@ -77,8 +77,8 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     heroTitle: "Welcome to",
     heroDescription: "Please register your visit before entering our premises.",
     registerNow: "Register Now",
+    registrationComplete: "Registration successful. Your visitor number is:",
     visitorRegistration: "Visitor Registration",
-    loginAsUser:"Login as User",
     welcome: "Welcome to MCS Internasional. Please register your visit.",
     fullName: "Full Name",
     fullNamePlaceholder: "Enter your full name",

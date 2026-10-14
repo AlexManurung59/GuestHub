@@ -10,8 +10,8 @@ export const scrollDivision = [
 'LAND BASE',
 'LISI',
 'PCSI',
-'RECRUITMENT',
-'OTHER'
+'CREWING',
+'MCSI'
 ];
 
 export const scrollRank = [
@@ -51,7 +51,10 @@ export const scrollPIC = [
 ];
 
 export function getPICByDivision(division: string): string[] {
-    if (division === "ASAHI" || division === "PCSI" ) {
+    if (division === "MCSI") {
+        return scrollPIC;
+    }
+    else if (division === "ASAHI" || division === "PCSI" ) {
         return ["HARNIFIRA"];
     }
     else if (division === "ASDP" || division === "ASL" || division === "HTC" || division === "LISI") {
@@ -63,7 +66,7 @@ export function getPICByDivision(division: string): string[] {
     else if (division === "CRUISE" || division === "LAND BASE" || division === "ICM") {
         return ["ALMUKAROM", "ENDAH NUR WIDHIANINGSIH"];
     }
-    else if (division === "RECRUITMENT") {
+    else if (division === "CREWING") {
         return ["CHINDY"];
     }
     else {

@@ -15,6 +15,8 @@ type VisitorAction = "add" | "cancel" | "status" | null;
 interface Visitor {
   id: number;
   name: string;
+  rank: string | null;
+  position: string | null;
   company: string | null;
   vessel: string | null;
   division: string | null;
@@ -53,6 +55,8 @@ function isVisitor(value: unknown): value is Visitor {
   return (
     typeof visitor.id === "number" &&
     typeof visitor.name === "string" &&
+    (typeof visitor.rank === "string" || visitor.rank === null) &&
+    (typeof visitor.position === "string" || visitor.position === null) &&
     (typeof visitor.company === "string" || visitor.company === null) &&
     (typeof visitor.vessel === "string" || visitor.vessel === null) &&
     (typeof visitor.division === "string" || visitor.division === null) &&
@@ -544,8 +548,8 @@ async function handleExitAccount() {
                       <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Name</th>
+                        <th scope="col">Rank</th>
                         <th scope="col">Company</th>
-                        <th scope="col">Vessel</th>
                         <th scope="col">Division</th>
                         <th scope="col">PIC</th>
                         <th scope="col">Waiting Time</th>
@@ -559,8 +563,8 @@ async function handleExitAccount() {
                             <span className="visitor-id">#{visitor.id}</span>
                           </td>
                           <td>{visitor.name}</td>
+                          <td>{visitor.rank || "-"}</td>
                           <td>{visitor.company || "-"}</td>
-                          <td>{visitor.vessel || "-"}</td>
                           <td>{visitor.division || "-"}</td>
                           <td>{visitor.pic || "-"}</td>
                           <td>
@@ -679,7 +683,7 @@ async function handleExitAccount() {
                 className="menu-item"
                 onClick={() => {
                   setMenuOpen(false);
-                  router.push("/tv");
+                  window.open("/tv", "_blank", "noopener,noreferrer");
                 }}
               >
                 <span className="menu-icon tv-icon" aria-hidden="true">
@@ -1078,10 +1082,9 @@ async function handleExitAccount() {
                             <strong>{visitor.name}</strong>
                             <small>
                               #{visitor.id}
+                              {visitor.rank ? ` • ${visitor.rank}` : ""}
                               {visitor.company
                                 ? ` • ${visitor.company}`
-                                : visitor.vessel
-                                  ? ` • ${visitor.vessel}`
                                   : ""}
                             </small>
                           </div>
@@ -1137,10 +1140,9 @@ async function handleExitAccount() {
                             <strong>{visitor.name}</strong>
                             <small>
                               #{visitor.id}
+                              {visitor.rank ? ` • ${visitor.rank}` : ""}
                               {visitor.company
                                 ? ` • ${visitor.company}`
-                                : visitor.vessel
-                                  ? ` • ${visitor.vessel}`
                                   : ""}
                             </small>
                             <span

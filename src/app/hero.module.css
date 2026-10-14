@@ -23,16 +23,14 @@
 }
 
 .logoBadge {
+  position: relative;
+  display: block;
+  width: 72px;
+  height: 88px;
+  margin-bottom: 1.5rem;
   background: transparent;
   z-index: 2;
-}
-
-.logoImage {
-  display: block;
-  width: 220px;
-  height: 80px;
-  object-fit: cover;
-  object-position: center;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
 .heroContent {
@@ -62,6 +60,19 @@
   max-width: 420px;
 }
 
+.registrationSuccess {
+  width: fit-content;
+  max-width: 100%;
+  margin: -1rem 0 1.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(187, 247, 208, 0.5);
+  border-radius: 6px;
+  background: rgba(20, 83, 45, 0.7);
+  color: #f0fdf4;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+
 .heroButton {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
@@ -73,14 +84,6 @@
   border-radius: 4px;
 }
 
-
-.logoBadge {
-  position: absolute;
-  width: 72px;
-  height: 88px;
-  z-index: 2;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
-}
 
 .logoImage {
   object-fit: contain;
@@ -97,15 +100,6 @@
 }
 
 @media (max-width: 640px) {
-  .logoBadge {
-    margin: 1rem !important;
-  }
-
-  .logoImage {
-    width: 170px;
-    height: 62px;
-  }
-
   .overlay {
     background: linear-gradient(
       180deg,

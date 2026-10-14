@@ -136,8 +136,12 @@ export default function VisitorsPage() {
               <br />
               Visitor type:{visitor.visitorType}
               <br />
-              Rank:{visitor.rank}
-              <br />
+              {visitor.rank && (
+                <>
+                  Rank:{visitor.rank}
+                  <br />
+                </>
+              )}
               Position:{visitor.position}
               <br />
               Division:{visitor.division}

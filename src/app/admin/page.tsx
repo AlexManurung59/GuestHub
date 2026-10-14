@@ -17,6 +17,8 @@ type VisitorStatus = "Waiting" | "Meeting" | "Completed" | "Cancelled";
 interface Visitor {
   id: number;
   name: string;
+  rank?: string | null;
+  position?: string | null;
   company?: string | null;
   vessel?: string | null;
   phone?: string | null;
@@ -698,8 +700,8 @@ async function handleExitAccount() {
                       <tr>
                         <th>ID</th>
                         <th>Visitor</th>
+                        <th>Rank</th>
                         <th>Company</th>
-                        <th>Vessel</th>
                         <th>Division</th>
                         <th>PIC</th>
                         <th>Waiting Time</th>
@@ -724,9 +726,9 @@ async function handleExitAccount() {
                             )}
                           </td>
 
-                          <td>{visitor.company || "-"}</td>
+                          <td>{visitor.rank || "-"}</td>
 
-                          <td>{visitor.vessel || "-"}</td>
+                          <td>{visitor.company || "-"}</td>
 
                           <td>{visitor.division || "-"}</td>
 
@@ -859,7 +861,7 @@ async function handleExitAccount() {
                 className="menu-item"
                 onClick={() => {
                   setMenuOpen(false);
-                  router.push("/tv");
+                  window.open("/tv", "_blank", "noopener,noreferrer");
                 }}
               >
                 <span className="menu-icon tv-icon">📺</span>
@@ -1262,6 +1264,7 @@ async function handleExitAccount() {
 
                       <small>
                         #{visitor.id}
+                        {visitor.rank ? ` • ${visitor.rank}` : ""}
                         {visitor.company
                           ? ` • ${visitor.company}`
                           : ""}
@@ -1330,6 +1333,7 @@ async function handleExitAccount() {
 
                       <small>
                         #{visitor.id}
+                        {visitor.rank ? ` • ${visitor.rank}` : ""}
                         {visitor.company
                           ? ` • ${visitor.company}`
                           : ""}
