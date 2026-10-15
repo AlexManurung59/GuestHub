@@ -1,5 +1,8 @@
+"use client";
+
 import { Visitor } from "@/types/visitor";
 import WaitingTimer from "@/components/WaitingTimer";
+import { useLanguage } from "@/app/language-provider";
 
 interface VisitorTableProps {
   visitors: Visitor[];
@@ -21,16 +24,21 @@ function getInitials(name: string) {
 }
 
 export default function VisitorTable({ visitors }: VisitorTableProps) {
+  const { translate } = useLanguage();
   return (
     <div className="card border-0 shadow-sm mt-4 visitor-card">
       <div className="card-body p-4">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div>
-            <h5 className="fw-bold mb-1">Visitor List</h5>
-            <p className="text-muted small mb-0">{visitors.length} visitors recorded</p>
+            <h5 className="fw-bold mb-1">
+              {translate("Daftar Pengunjung", "Visitor List")}
+            </h5>
+            <p className="text-muted small mb-0">
+              {visitors.length} {translate("pengunjung tercatat", "visitors recorded")}
+            </p>
           </div>
           <button className="btn btn-primary btn-sm px-3 rounded-pill fw-semibold">
-            View All
+            {translate("Lihat Semua", "View All")}
           </button>
         </div>
 
@@ -38,22 +46,22 @@ export default function VisitorTable({ visitors }: VisitorTableProps) {
           <table className="table align-middle mb-0 visitor-table">
             <thead>
               <tr className="text-uppercase small text-muted">
-                <th className="border-0 pb-3">Name</th>
-                <th className="border-0 pb-3">Company/Vessel</th>
-                <th className="border-0 pb-3">Purpose</th>
-                <th className="border-0 pb-3">Phone</th>
-                <th className="border-0 pb-3">Division</th>
+                <th className="border-0 pb-3">{translate("Nama", "Name")}</th>
+                <th className="border-0 pb-3">{translate("Perusahaan/Kapal", "Company/Vessel")}</th>
+                <th className="border-0 pb-3">{translate("Keperluan", "Purpose")}</th>
+                <th className="border-0 pb-3">{translate("Telepon", "Phone")}</th>
+                <th className="border-0 pb-3">{translate("Divisi", "Division")}</th>
                 <th className="border-0 pb-3">PIC</th>
-                <th className="border-0 pb-3">Check-in</th>
-                <th className="border-0 pb-3">Waiting Time</th>
-                <th className="border-0 pb-3">Status</th>
+                <th className="border-0 pb-3">{translate("Waktu Masuk", "Check-in")}</th>
+                <th className="border-0 pb-3">{translate("Lama Menunggu", "Waiting Time")}</th>
+                <th className="border-0 pb-3">{translate("Status", "Status")}</th>
               </tr>
             </thead>
             <tbody>
               {visitors.length === 0 && (
                 <tr>
                   <td colSpan={8} className="text-center text-muted py-5 border-0">
-                    No visitors found.
+                    {translate("Pengunjung tidak ditemukan.", "No visitors found.")}
                   </td>
                 </tr>
               )}
@@ -86,14 +94,23 @@ export default function VisitorTable({ visitors }: VisitorTableProps) {
                         </span>
                       ):(
                         <span className="text-primary">
-                          Visiting
+                          {translate("Berkunjung", "Visiting")}
                         </span>
                       )}
                     </td>
                     <td className="border-0">
                       <span className={`status-badge ${config.badge}`}>
                         <span className={`status-dot ${config.dot}`} />
-                        {visitor.status}
+                        {translate(
+                          visitor.status === "Waiting"
+                            ? "Menunggu"
+                            : visitor.status === "Meeting"
+                              ? "Bertemu"
+                              : visitor.status === "Completed"
+                                ? "Selesai"
+                                : visitor.status,
+                          visitor.status,
+                        )}
                       </span>
                     </td>
                   </tr>

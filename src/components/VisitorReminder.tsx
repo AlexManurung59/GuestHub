@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/app/language-provider";
 
 export const WAITING_REMINDER_THRESHOLD_MINUTES = 10;
 export const VISITOR_REFRESH_INTERVAL_MS = 10_000;
@@ -16,6 +17,7 @@ export default function VisitorReminder({
   checkIn,
   thresholdMinutes = WAITING_REMINDER_THRESHOLD_MINUTES,
 }: VisitorReminderProps) {
+  const { translate } = useLanguage();
   const [waitingMinutes, setWaitingMinutes] = useState<number | null>(null);
   const [dismissedCheckIn, setDismissedCheckIn] = useState<string | null>(null);
 
@@ -68,21 +70,28 @@ export default function VisitorReminder({
       </div>
       <div className="visitor-reminder-content">
         <div className="visitor-reminder-heading">
-          <span className="visitor-reminder-eyebrow">WAITING FOR ASSISTANCE</span>
+          <span className="visitor-reminder-eyebrow">
+            {translate("MENUNGGU BANTUAN", "WAITING FOR ASSISTANCE")}
+          </span>
           <span className="visitor-reminder-duration">
-            {waitingMinutes} min
+            {waitingMinutes} {translate("menit", "min")}
           </span>
         </div>
         <h2 className="visitor-reminder-title">{visitorName}</h2>
         <p className="visitor-reminder-copy">
-          This visitor has been waiting longer than {thresholdMinutes} minutes.
-          Please follow up.
+          {translate(
+            `Pengunjung ini telah menunggu lebih dari ${thresholdMinutes} menit. Mohon ditindaklanjuti.`,
+            `This visitor has been waiting longer than ${thresholdMinutes} minutes. Please follow up.`,
+          )}
         </p>
       </div>
       <button
         type="button"
         className="visitor-reminder-dismiss"
-        aria-label={`Dismiss reminder for ${visitorName}`}
+        aria-label={translate(
+          `Tutup pengingat untuk ${visitorName}`,
+          `Dismiss reminder for ${visitorName}`,
+        )}
         onClick={() => setDismissedCheckIn(checkIn)}
       >
         ×

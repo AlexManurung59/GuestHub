@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { VISITOR_REFRESH_INTERVAL_MS } from "@/components/VisitorReminder";
+import { LanguageSwitcher, useLanguage } from "../language-provider";
 
 interface Visitor {
   id: number;
@@ -41,6 +42,7 @@ function isVisitor(value: unknown): value is Visitor {
 }
 
 export default function VisitorsPage() {
+  const { translate } = useLanguage();
   const [visitors, setVisitors] = useState<Visitor[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -100,57 +102,73 @@ export default function VisitorsPage() {
   }
 
   if (loading) {
-    return <p role="status">Loading visitors...</p>;
+    return <p role="status">{translate("Memuat pengunjung...", "Loading visitors...")}</p>;
   }
 
   return (
     <main className="container py-5">
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
         <div>
-          <h1 className="mb-1">Today&apos;s Visitors</h1>
+          <h1 className="mb-1">{translate("Pengunjung Hari Ini", "Today's Visitors")}</h1>
           <p className="text-secondary mb-0">
-            Older visitor records remain saved.
+            {translate("Data pengunjung sebelumnya tetap tersimpan.", "Older visitor records remain saved.")}
           </p>
         </div>
+        <LanguageSwitcher />
         <button
           type="button"
           className="btn btn-outline-primary"
           onClick={() => void handleRefresh()}
           disabled={refreshing}
         >
-          {refreshing ? "Refreshing..." : "Refresh list"}
+          {refreshing
+            ? translate("Memuat ulang...", "Refreshing...")
+            : translate("Muat ulang daftar", "Refresh list")}
         </button>
       </div>
       {error && <div className="alert alert-danger" role="alert">{error}</div>}
       {!error && visitors.length === 0 && (
-        <p className="text-secondary">No visitors registered today.</p>
+        <p className="text-secondary">
+          {translate("Belum ada pengunjung terdaftar hari ini.", "No visitors registered today.")}
+        </p>
       )}
       {visitors.map((visitor) => (
         <div key={visitor.id} className="card mb-3">
           <div className="card-body">
             <h5 className="card-title">{visitor.name}</h5>
             <p className="card-text">
-              Company:{visitor.company}
+              {translate("Perusahaan", "Company")}: {visitor.company}
               <br />
-              Vessel:{visitor.vessel}
+              {translate("Kapal", "Vessel")}: {visitor.vessel}
               <br />
-              Visitor type:{visitor.visitorType}
+              {translate("Jenis pengunjung", "Visitor type")}: {visitor.visitorType}
               <br />
               {visitor.rank && (
                 <>
-                  Rank:{visitor.rank}
+                  {translate("Pangkat", "Rank")}: {visitor.rank}
                   <br />
                 </>
               )}
-              Position:{visitor.position}
+              {translate("Jabatan", "Position")}: {visitor.position}
               <br />
-              Division:{visitor.division}
+              {translate("Divisi", "Division")}: {visitor.division}
               <br />
-              Purpose:{visitor.purpose}
+              {translate("Keperluan", "Purpose")}: {visitor.purpose}
               <br />
               PIC:{visitor.pic}
               <br />
-              Status:{visitor.status}
+              {translate("Status", "Status")}: {translate(
+                visitor.status === "Waiting"
+                  ? "Menunggu"
+                  : visitor.status === "Meeting"
+                    ? "Bertemu"
+                    : visitor.status === "Completed"
+                      ? "Selesai"
+                      : visitor.status === "Cancelled"
+                        ? "Dibatalkan"
+                        : visitor.status,
+                visitor.status,
+              )}
             </p>
           </div>
         </div>

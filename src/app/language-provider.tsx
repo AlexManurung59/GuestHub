@@ -113,6 +113,7 @@ type LanguageContextValue = {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: TranslationKey) => string;
+  translate: (indonesian: string, english: string) => string;
 };
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
@@ -150,7 +151,15 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [language]);
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: setStoredLanguage, t: (key) => translations[language][key] }}>
+    <LanguageContext.Provider
+      value={{
+        language,
+        setLanguage: setStoredLanguage,
+        t: (key) => translations[language][key],
+        translate: (indonesian, english) =>
+          language === "id" ? indonesian : english,
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );

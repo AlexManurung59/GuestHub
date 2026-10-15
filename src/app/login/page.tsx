@@ -4,9 +4,11 @@ import {FormEvent,useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./login.module.css";
+import { LanguageSwitcher, useLanguage } from "../language-provider";
 
 
 export default function LoginPage(){
+    const { translate } = useLanguage();
     const [username,setUsername]=useState("");
     const [password, setPassword]=useState("");
     const[error,setError]=useState("");
@@ -75,6 +77,9 @@ try{
 
     return (
         <main className={styles.loginPage}>
+            <div className="position-absolute top-0 end-0 m-3" style={{ zIndex: 1 }}>
+                <LanguageSwitcher />
+            </div>
             <Image
                 src="/aa.jpg"
                 alt=""
@@ -86,10 +91,14 @@ try{
             />
             <div className={styles.backgroundOverlay} aria-hidden="true" />
             <section className={styles.loginPanel} aria-labelledby="login-title">
-                <h1 id="login-title" className={styles.title}>Account Login</h1>
+                <h1 id="login-title" className={styles.title}>
+                    {translate("Masuk ke Akun", "Account Login")}
+                </h1>
                 <form onSubmit={handleLogin} className={styles.loginForm}>
                     <div className={styles.inputRow}>
-                        <label htmlFor="username" className="visually-hidden">Username</label>
+                        <label htmlFor="username" className="visually-hidden">
+                            {translate("Nama pengguna", "Username")}
+                        </label>
                         <svg className={styles.fieldIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <circle cx="12" cy="8" r="3.5" />
                             <path d="M5 20c.5-3.3 3.2-5.5 7-5.5s6.5 2.2 7 5.5" />
@@ -99,13 +108,15 @@ try{
                             type="text"
                             value={username}
                             onChange={(event) => setUsername(event.target.value)}
-                            placeholder="User name"
+                            placeholder={translate("Nama pengguna", "Username")}
                             autoComplete="username"
                             required
                         />
                     </div>
                     <div className={styles.inputRow}>
-                        <label htmlFor="password" className="visually-hidden">Password</label>
+                        <label htmlFor="password" className="visually-hidden">
+                            {translate("Kata sandi", "Password")}
+                        </label>
                         <svg className={styles.fieldIcon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <rect x="6.5" y="10" width="11" height="9" rx="1.5" />
                             <path d="M9 10V7.5a3 3 0 0 1 6 0V10" />
@@ -115,7 +126,7 @@ try{
                             type="password"
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
-                            placeholder="Password"
+                            placeholder={translate("Kata sandi", "Password")}
                             autoComplete="current-password"
                             required
                         />
@@ -131,12 +142,14 @@ try{
                             className={styles.submitButton}
                             disabled={loading}
                         >
-                            {loading ? "Logging in..." : "Login"}
+                            {loading
+                                ? translate("Sedang masuk...", "Logging in...")
+                                : translate("Masuk", "Login")}
                         </button>
                     </div>
                 </form>
                 <Link href="/" className={styles.homeLink}>
-                    Back to Home
+                    {translate("Kembali ke Beranda", "Back to Home")}
                 </Link>
             </section>
         </main>

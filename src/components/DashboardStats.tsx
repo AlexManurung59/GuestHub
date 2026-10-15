@@ -1,12 +1,14 @@
 'use client';
 
 import { Visitor } from "@/types/visitor";
+import { useLanguage } from "@/app/language-provider";
 
 interface DashboardStatsProps {
   visitors: Visitor[];
 }
 
 export default function DashboardStats({ visitors }: DashboardStatsProps) {
+  const { translate } = useLanguage();
   const totalVisitors = visitors.length;
   const waitingVisitors = visitors.filter((v) => v.status === "Waiting").length;
   const visitingVisitors = visitors.filter((v) => v.status === "Meeting").length;
@@ -14,25 +16,25 @@ export default function DashboardStats({ visitors }: DashboardStatsProps) {
 
   const stats = [
     {
-      label: "Total Visitors",
+      label: translate("Total Pengunjung", "Total Visitors"),
       value: totalVisitors,
       icon: "👥",
       gradient: "stat-gradient-primary",
     },
     {
-      label: "Waiting",
+      label: translate("Menunggu", "Waiting"),
       value: waitingVisitors,
       icon: "⏳",
       gradient: "stat-gradient-warning",
     },
     {
-      label: "Currently Visiting",
+      label: translate("Sedang Berkunjung", "Currently Visiting"),
       value: visitingVisitors,
       icon: "🏢",
       gradient: "stat-gradient-info",
     },
     {
-      label: "Completed",
+      label: translate("Selesai", "Completed"),
       value: completedVisitors,
       icon: "✅",
       gradient: "stat-gradient-success",

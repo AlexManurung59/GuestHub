@@ -2,6 +2,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useLanguage } from "@/app/language-provider";
 
 type ManagedUser = {
   id: number;
@@ -13,6 +14,7 @@ type ManagedUser = {
 };
 
 export default function ManageUsers() {
+  const { translate } = useLanguage();
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -271,9 +273,12 @@ useEffect(() => {
     <section className="container-fluid py-3">
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
         <div>
-          <h2 className="fw-bold mb-1">Manage Users</h2>
+          <h2 className="fw-bold mb-1">{translate("Kelola Pengguna", "Manage Users")}</h2>
           <p className="text-secondary mb-0">
-            Create accounts and manage user access.
+            {translate(
+              "Buat akun dan kelola akses pengguna.",
+              "Create accounts and manage user access.",
+            )}
           </p>
         </div>
 
@@ -284,7 +289,7 @@ useEffect(() => {
           disabled={loading || saving}
         >
           <i className="bi bi-arrow-clockwise me-2" />
-          Refresh
+          {translate("Muat Ulang", "Refresh")}
         </button>
       </div>
 
@@ -304,21 +309,21 @@ useEffect(() => {
         <div className="card-body p-4">
           <h5 className="fw-bold mb-3">
             <i className="bi bi-person-plus me-2" />
-            Create User Account
+            {translate("Buat Akun Pengguna", "Create User Account")}
           </h5>
 
           <form onSubmit={createUser}>
             <div className="row g-3">
               <div className="col-12 col-md-4">
                 <label htmlFor="new-user-name" className="form-label">
-                  Full Name
+                  {translate("Nama Lengkap", "Full Name")}
                 </label>
                 <input
                   id="new-user-name"
                   className="form-control"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  placeholder="Enter full name"
+                  placeholder={translate("Masukkan nama lengkap", "Enter full name")}
                   autoComplete="name"
                   required
                 />
@@ -326,14 +331,14 @@ useEffect(() => {
 
               <div className="col-12 col-md-4">
                 <label htmlFor="new-user-username" className="form-label">
-                  Username
+                  {translate("Nama Pengguna", "Username")}
                 </label>
                 <input
                   id="new-user-username"
                   className="form-control"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
-                  placeholder="Enter username"
+                  placeholder={translate("Masukkan nama pengguna", "Enter username")}
                   autoComplete="username"
                   required
                 />
@@ -341,7 +346,7 @@ useEffect(() => {
 
               <div className="col-12 col-md-4">
                 <label htmlFor="new-user-password" className="form-label">
-                  Initial Password
+                  {translate("Kata Sandi Awal", "Initial Password")}
                 </label>
                 <input
                   id="new-user-password"
@@ -349,7 +354,7 @@ useEffect(() => {
                   className="form-control"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  placeholder="At least 8 characters"
+                  placeholder={translate("Minimal 8 karakter", "At least 8 characters")}
                   autoComplete="new-password"
                   minLength={8}
                   required
@@ -362,7 +367,9 @@ useEffect(() => {
                   className="btn btn-primary"
                   disabled={saving}
                 >
-                  {saving ? "Please wait..." : "Create Account"}
+                  {saving
+                    ? translate("Mohon tunggu...", "Please wait...")
+                    : translate("Buat Akun", "Create Account")}
                 </button>
               </div>
             </div>
@@ -372,13 +379,18 @@ useEffect(() => {
 
       <div className="card border-0 shadow-sm rounded-4 mb-4">
         <div className="card-body p-4">
-          <h5 className="fw-bold mb-3">User Accounts</h5>
+          <h5 className="fw-bold mb-3">{translate("Akun Pengguna", "User Accounts")}</h5>
 
           {loading ? (
-            <p className="text-secondary mb-0">Loading users...</p>
+            <p className="text-secondary mb-0">
+              {translate("Memuat pengguna...", "Loading users...")}
+            </p>
           ) : users.length === 0 ? (
             <p className="text-secondary mb-0">
-              No user accounts were returned by the API.
+              {translate(
+                "API tidak mengembalikan akun pengguna.",
+                "No user accounts were returned by the API.",
+              )}
             </p>
           ) : (
             <div className="table-responsive">
@@ -386,11 +398,11 @@ useEffect(() => {
                 <thead className="table-light">
                   <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>{translate("Nama", "Name")}</th>
+                    <th>{translate("Nama Pengguna", "Username")}</th>
+                    <th>{translate("Peran", "Role")}</th>
+                    <th>{translate("Status", "Status")}</th>
+                    <th>{translate("Tindakan", "Actions")}</th>
                   </tr>
                 </thead>
 
@@ -419,7 +431,9 @@ useEffect(() => {
                               : "text-bg-danger"
                           }`}
                         >
-                          {user.isActive ? "Active" : "Inactive"}
+                          {user.isActive
+                            ? translate("Aktif", "Active")
+                            : translate("Nonaktif", "Inactive")}
                         </span>
                       </td>
                       <td>
@@ -437,7 +451,7 @@ useEffect(() => {
                               setVerifiedUserId(null);
                             }}
                           >
-                            Change Password
+                            {translate("Ubah Kata Sandi", "Change Password")}
                           </button>
 
                           <button
@@ -453,7 +467,7 @@ useEffect(() => {
                               setVerifiedUserId(null);
                             }}
                           >
-                            Verify
+                            {translate("Verifikasi", "Verify")}
                           </button>
 
                           <button
@@ -462,7 +476,7 @@ useEffect(() => {
                             disabled={saving}
                             onClick={() => void deleteUser(user)}
                           >
-                            Delete
+                            {translate("Hapus", "Delete")}
                           </button>
                         </div>
                       </td>
@@ -481,14 +495,14 @@ useEffect(() => {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h5 className="fw-bold mb-0">
                 {activeAction === "change"
-                  ? "Change User Password"
-                  : "Verify User Password"}
+                  ? translate("Ubah Kata Sandi Pengguna", "Change User Password")
+                  : translate("Verifikasi Kata Sandi Pengguna", "Verify User Password")}
               </h5>
 
               <button
                 type="button"
                 className="btn-close"
-                aria-label="Close"
+                aria-label={translate("Tutup", "Close")}
                 onClick={() => {
                   setActiveAction(null);
                   setNewPassword("");
@@ -501,7 +515,7 @@ useEffect(() => {
 
             <div className="mb-3">
               <label htmlFor="selected-user" className="form-label">
-                Select User
+                {translate("Pilih Pengguna", "Select User")}
               </label>
               <select
                 id="selected-user"
@@ -514,7 +528,9 @@ useEffect(() => {
                 }}
                 required
               >
-                <option value="">Choose an account...</option>
+                <option value="">
+                  {translate("Pilih akun...", "Choose an account...")}
+                </option>
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.username} — {user.name}
@@ -527,7 +543,7 @@ useEffect(() => {
               <form onSubmit={changePassword}>
                 <div className="mb-3">
                   <label htmlFor="new-password" className="form-label">
-                    New Password
+                    {translate("Kata Sandi Baru", "New Password")}
                   </label>
                   <input
                     id="new-password"
@@ -539,7 +555,7 @@ useEffect(() => {
                     }
                     autoComplete="new-password"
                     minLength={8}
-                    placeholder="Enter the new password"
+                    placeholder={translate("Masukkan kata sandi baru", "Enter the new password")}
                     required
                   />
                 </div>
@@ -549,14 +565,16 @@ useEffect(() => {
                   className="btn btn-primary"
                   disabled={saving}
                 >
-                  {saving ? "Saving..." : "Update Password"}
+                  {saving
+                    ? translate("Menyimpan...", "Saving...")
+                    : translate("Perbarui Kata Sandi", "Update Password")}
                 </button>
               </form>
             ) : (
               <form onSubmit={verifyUserPassword}>
                 <div className="mb-3">
                   <label htmlFor="verify-password" className="form-label">
-                    Current Password to Verify
+                    {translate("Kata Sandi Saat Ini untuk Diverifikasi", "Current Password to Verify")}
                   </label>
                   <input
                     id="verify-password"
@@ -567,7 +585,7 @@ useEffect(() => {
                       setVerifyPassword(event.target.value)
                     }
                     autoComplete="off"
-                    placeholder="Enter the password to check"
+                    placeholder={translate("Masukkan kata sandi untuk diperiksa", "Enter the password to check")}
                     required
                   />
                 </div>
@@ -577,7 +595,9 @@ useEffect(() => {
                   className="btn btn-success"
                   disabled={saving}
                 >
-                  {saving ? "Checking..." : "Verify Password"}
+                  {saving
+                    ? translate("Memeriksa...", "Checking...")
+                    : translate("Verifikasi Kata Sandi", "Verify Password")}
                 </button>
 
                 {verifiedUserId === Number(selectedUserId) &&

@@ -9,6 +9,7 @@ import { VISITOR_REFRESH_INTERVAL_MS } from "@/components/VisitorReminder";
 import "../admin/admin.css";
 import { useRouter } from "next/navigation";
 import "./user.css";
+import { LanguageSwitcher, useLanguage } from "../language-provider";
 
 type VisitorStatus = "Waiting" | "Meeting" | "Completed" | "Cancelled";
 type VisitorAction = "add" | "cancel" | "status" | null;
@@ -95,6 +96,7 @@ function isVisitorStatus(status: string): status is VisitorStatus {
 }
 
 export default function UserPage() {
+  const { translate } = useLanguage();
   const [visitors, setVisitors] = useState<Visitor[]>([]);
   const router=useRouter();
   const [loading, setLoading] = useState(true);
@@ -458,49 +460,60 @@ async function handleExitAccount() {
         <section className="container-fluid admin-container">
           <header className="dashboard-header">
             <div>
-              <p className="dashboard-label">USER DASHBOARD</p>
-              <h1>Visitor Management</h1>
+              <p className="dashboard-label">
+                {translate("DASHBOARD PENGGUNA", "USER DASHBOARD")}
+              </p>
+              <h1>{translate("Manajemen Pengunjung", "Visitor Management")}</h1>
               <p className="dashboard-subtitle">
-                View today&apos;s visitor activity.
+                {translate(
+                  "Lihat aktivitas pengunjung hari ini.",
+                  "View today's visitor activity.",
+                )}
               </p>
             </div>
 
-            <div className="user-badge">User</div>
+            <div className="d-flex align-items-center gap-3">
+              <LanguageSwitcher />
+              <div className="user-badge">{translate("Pengguna", "User")}</div>
+            </div>
           </header>
 
-          <section className="statistics-grid" aria-label="Visitor statistics">
+          <section
+            className="statistics-grid"
+            aria-label={translate("Statistik pengunjung", "Visitor statistics")}
+          >
             <article className="stat-card">
               <span className="stat-icon" aria-hidden="true">👥</span>
               <div>
-                <p>Total Visitors</p>
+                <p>{translate("Total Pengunjung", "Total Visitors")}</p>
                 <h2>{visitorCounts.total}</h2>
               </div>
             </article>
             <article className="stat-card">
               <span className="stat-icon" aria-hidden="true">⏳</span>
               <div>
-                <p>Waiting</p>
+                <p>{translate("Menunggu", "Waiting")}</p>
                 <h2>{visitorCounts.waiting}</h2>
               </div>
             </article>
             <article className="stat-card">
               <span className="stat-icon" aria-hidden="true">🤝</span>
               <div>
-                <p>In Meeting</p>
+                <p>{translate("Bertemu", "In Meeting")}</p>
                 <h2>{visitorCounts.meeting}</h2>
               </div>
             </article>
             <article className="stat-card">
               <span className="stat-icon" aria-hidden="true">✅</span>
               <div>
-                <p>Completed</p>
+                <p>{translate("Selesai", "Completed")}</p>
                 <h2>{visitorCounts.completed}</h2>
               </div>
             </article>
             <article className="stat-card">
               <span className="stat-icon" aria-hidden="true">✖️</span>
               <div>
-                <p>Cancelled</p>
+                <p>{translate("Dibatalkan", "Cancelled")}</p>
                 <h2>{visitorCounts.cancelled}</h2>
               </div>
             </article>
@@ -512,10 +525,12 @@ async function handleExitAccount() {
           >
             <div className="section-header">
               <div>
-                <h2>Today&apos;s Visitors</h2>
+                <h2>{translate("Pengunjung Hari Ini", "Today's Visitors")}</h2>
                 <p>
-                  The list and TV alarm state update automatically. Previous
-                  visitor records are kept in the database.
+                  {translate(
+                    "Daftar dan status alarm TV diperbarui otomatis. Data pengunjung sebelumnya tetap tersimpan di basis data.",
+                    "The list and TV alarm state update automatically. Previous visitor records are kept in the database.",
+                  )}
                 </p>
               </div>
 
@@ -526,10 +541,12 @@ async function handleExitAccount() {
                   onClick={() => void handleRefresh()}
                   disabled={refreshing}
                 >
-                  {refreshing ? "Refreshing..." : "Refresh list"}
+                  {refreshing
+                    ? translate("Memuat ulang...", "Refreshing...")
+                    : translate("Muat ulang daftar", "Refresh list")}
                 </button>
                 <span className="visitor-count">
-                  {visitors.length} visitors
+                  {visitors.length} {translate("pengunjung", "visitors")}
                 </span>
               </div>
             </div>
@@ -549,13 +566,18 @@ async function handleExitAccount() {
               {loading ? (
                 <div className="empty-state">
                   <div className="spinner-border" role="status" />
-                  <p>Loading visitors...</p>
+                  <p>{translate("Memuat pengunjung...", "Loading visitors...")}</p>
                 </div>
               ) : visitors.length === 0 ? (
                 <div className="empty-state">
                   <div className="empty-icon" aria-hidden="true">👤</div>
-                  <h3>No visitors today</h3>
-                  <p>Visitor records will appear here.</p>
+                  <h3>{translate("Belum ada pengunjung hari ini", "No visitors today")}</h3>
+                  <p>
+                    {translate(
+                      "Data pengunjung akan muncul di sini.",
+                      "Visitor records will appear here.",
+                    )}
+                  </p>
                 </div>
               ) : (
                 <div className="table-responsive">
@@ -563,13 +585,13 @@ async function handleExitAccount() {
                     <thead>
                       <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Rank</th>
-                        <th scope="col">Company</th>
-                        <th scope="col">Division</th>
+                        <th scope="col">{translate("Nama", "Name")}</th>
+                        <th scope="col">{translate("Pangkat", "Rank")}</th>
+                        <th scope="col">{translate("Perusahaan", "Company")}</th>
+                        <th scope="col">{translate("Divisi", "Division")}</th>
                         <th scope="col">PIC</th>
-                        <th scope="col">Waiting Time</th>
-                        <th scope="col">Status &amp; TV Alarm</th>
+                        <th scope="col">{translate("Lama Menunggu", "Waiting Time")}</th>
+                        <th scope="col">{translate("Status & Alarm TV", "Status & TV Alarm")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -602,13 +624,19 @@ async function handleExitAccount() {
                                   }
                                 }}
                                 disabled={actionLoading}
-                                aria-label={`Change status for ${visitor.name}`}
-                                title="Select to change visitor status"
+                                aria-label={translate(
+                                  `Ubah status ${visitor.name}`,
+                                  `Change status for ${visitor.name}`,
+                                )}
+                                title={translate(
+                                  "Pilih untuk mengubah status pengunjung",
+                                  "Select to change visitor status",
+                                )}
                               >
-                                <option value="Waiting">Waiting</option>
-                                <option value="Meeting">Meeting</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Cancelled">Cancelled</option>
+                                <option value="Waiting">{translate("Menunggu", "Waiting")}</option>
+                                <option value="Meeting">{translate("Bertemu", "Meeting")}</option>
+                                <option value="Completed">{translate("Selesai", "Completed")}</option>
+                                <option value="Cancelled">{translate("Dibatalkan", "Cancelled")}</option>
                               </select>
                               {visitor.status === "Waiting" && (
                                 <div className="visitor-alarm-actions">
@@ -623,9 +651,12 @@ async function handleExitAccount() {
                                       (alarmActive &&
                                         alarmVisitorId === visitor.id)
                                     }
-                                    aria-label={`Trigger TV alarm for ${visitor.name}`}
+                                    aria-label={translate(
+                                      `Aktifkan alarm TV untuk ${visitor.name}`,
+                                      `Trigger TV alarm for ${visitor.name}`,
+                                    )}
                                   >
-                                    Trigger
+                                    {translate("Aktifkan", "Trigger")}
                                   </button>
                                   <button
                                     type="button"
@@ -638,9 +669,12 @@ async function handleExitAccount() {
                                       !alarmActive ||
                                       alarmVisitorId !== visitor.id
                                     }
-                                    aria-label={`Stop TV alarm for ${visitor.name}`}
+                                    aria-label={translate(
+                                      `Hentikan alarm TV untuk ${visitor.name}`,
+                                      `Stop TV alarm for ${visitor.name}`,
+                                    )}
                                   >
-                                    Stop
+                                    {translate("Hentikan", "Stop")}
                                   </button>
                                 </div>
                               )}
@@ -665,14 +699,14 @@ async function handleExitAccount() {
           <nav className="apple-menu-panel" aria-label="User menu">
             <div className="apple-menu-header">
               <div>
-                <span>User Menu</span>
-                <small>Visitor Management</small>
+                <span>{translate("Menu Pengguna", "User Menu")}</span>
+                <small>{translate("Manajemen Pengunjung", "Visitor Management")}</small>
               </div>
               <button
                 type="button"
                 className="menu-close-button"
                 onClick={() => setMenuOpen(false)}
-                aria-label="Close menu"
+                aria-label={translate("Tutup menu", "Close menu")}
               >
                 ×
               </button>
@@ -692,7 +726,7 @@ async function handleExitAccount() {
                 <span className="menu-icon visitor-icon" aria-hidden="true">
                   👤
                 </span>
-                <span>Visitor</span>
+                <span>{translate("Pengunjung", "Visitor")}</span>
               </button>
               <button
                 type="button"
@@ -714,7 +748,7 @@ async function handleExitAccount() {
                 <span className="menu-icon excel-icon" aria-hidden="true">
                   📊
                 </span>
-                <span>Export Excel</span>
+                <span>{translate("Ekspor Excel", "Export Excel")}</span>
               </a>
               <button
                 type="button"
@@ -724,7 +758,7 @@ async function handleExitAccount() {
                 <span className="menu-icon exit-icon" aria-hidden="true">
                   🚪
                 </span>
-                <span>Exit Account</span>
+                <span>{translate("Keluar dari Akun", "Exit Account")}</span>
               </button>
             </div>
           </nav>
@@ -736,7 +770,7 @@ async function handleExitAccount() {
             menuOpen ? "floating-menu-button-open" : ""
           }`}
           onClick={() => setMenuOpen((current) => !current)}
-          aria-label="Open user menu"
+          aria-label={translate("Buka menu pengguna", "Open user menu")}
           aria-expanded={menuOpen}
         >
           {menuOpen ? "×" : "☰"}
@@ -762,8 +796,8 @@ async function handleExitAccount() {
           >
             <div className="visitor-panel-header">
               <div>
-                <p>VISITOR MANAGEMENT</p>
-                <h2 id="user-visitor-panel-title">Visitor</h2>
+                <p>{translate("MANAJEMEN PENGUNJUNG", "VISITOR MANAGEMENT")}</p>
+                <h2 id="user-visitor-panel-title">{translate("Pengunjung", "Visitor")}</h2>
               </div>
               {actionMessage && (
                 <div className="alert alert-success mt-3 mb-0" role="status">
@@ -778,7 +812,7 @@ async function handleExitAccount() {
                   setVisitorAction(null);
                 }}
                 disabled={actionLoading}
-                aria-label="Close visitor panel"
+                aria-label={translate("Tutup panel pengunjung", "Close visitor panel")}
               >
                 ×
               </button>
@@ -805,8 +839,8 @@ async function handleExitAccount() {
                     ＋
                   </span>
                   <span>
-                    <strong>Add Visitor</strong>
-                    <small>Register a new visitor</small>
+                    <strong>{translate("Tambah Pengunjung", "Add Visitor")}</strong>
+                    <small>{translate("Daftarkan pengunjung baru", "Register a new visitor")}</small>
                   </span>
                 </button>
                 <button
@@ -825,8 +859,8 @@ async function handleExitAccount() {
                     ×
                   </span>
                   <span>
-                    <strong>Cancel Visitor</strong>
-                    <small>Cancel a waiting visitor</small>
+                    <strong>{translate("Batalkan Pengunjung", "Cancel Visitor")}</strong>
+                    <small>{translate("Batalkan pengunjung yang menunggu", "Cancel a waiting visitor")}</small>
                   </span>
                 </button>
                 <button
@@ -845,8 +879,8 @@ async function handleExitAccount() {
                     ↻
                   </span>
                   <span>
-                    <strong>Change Status</strong>
-                    <small>Update visitor status</small>
+                    <strong>{translate("Ubah Status", "Change Status")}</strong>
+                    <small>{translate("Perbarui status pengunjung", "Update visitor status")}</small>
                   </span>
                 </button>
               </div>
@@ -864,8 +898,8 @@ async function handleExitAccount() {
                     ←
                   </button>
                   <div>
-                    <h3>Add Visitor</h3>
-                    <p>Register a new visitor.</p>
+                    <h3>{translate("Tambah Pengunjung", "Add Visitor")}</h3>
+                    <p>{translate("Daftarkan pengunjung baru.", "Register a new visitor.")}</p>
                   </div>
                 </div>
 
@@ -873,7 +907,7 @@ async function handleExitAccount() {
                   <div className="visitor-form-grid row g-3">
                     <div className="form-field col-12 col-md-6">
                       <label htmlFor="user-visitor-name" className="form-label">
-                        Visitor Name
+                        {translate("Nama Pengunjung", "Visitor Name")}
                       </label>
                       <input
                         id="user-visitor-name"
@@ -886,18 +920,20 @@ async function handleExitAccount() {
                             name: event.target.value.toUpperCase(),
                           }))
                         }
-                        placeholder="Enter visitor name"
+                        placeholder={translate("Masukkan nama pengunjung", "Enter visitor name")}
                         required
                       />
                     </div>
 
                     <div className="form-field col-12">
                       <fieldset>
-                        <legend className="form-label">Visitor type</legend>
+                        <legend className="form-label">
+                          {translate("Jenis pengunjung", "Visitor type")}
+                        </legend>
                         <div
                           className="btn-group"
                           role="group"
-                          aria-label="Visitor type"
+                          aria-label={translate("Jenis pengunjung", "Visitor type")}
                         >
                           <input
                             className="btn-check"
@@ -921,7 +957,7 @@ async function handleExitAccount() {
                             className="btn btn-outline-primary"
                             htmlFor="user-visitor-seafarer"
                           >
-                            Seafarer
+                            {translate("Pelaut", "Seafarer")}
                           </label>
                           <input
                             className="btn-check"
@@ -943,7 +979,7 @@ async function handleExitAccount() {
                             className="btn btn-outline-primary"
                             htmlFor="user-visitor-guest"
                           >
-                            Guest
+                            {translate("Tamu", "Guest")}
                           </label>
                         </div>
                       </fieldset>
@@ -955,7 +991,7 @@ async function handleExitAccount() {
                           htmlFor="user-visitor-company-name"
                           className="form-label"
                         >
-                          Company
+                          {translate("Perusahaan", "Company")}
                         </label>
                         <input
                           id="user-visitor-company-name"
@@ -968,7 +1004,7 @@ async function handleExitAccount() {
                               company: event.target.value.toUpperCase(),
                             }))
                           }
-                          placeholder="Company name"
+                          placeholder={translate("Nama perusahaan", "Company name")}
                           required
                         />
                       </div>
@@ -980,7 +1016,7 @@ async function handleExitAccount() {
                           htmlFor="user-visitor-rank"
                           className="form-label"
                         >
-                          Rank
+                          {translate("Pangkat", "Rank")}
                         </label>
                         <select
                           id="user-visitor-rank"
@@ -998,7 +1034,7 @@ async function handleExitAccount() {
                           }
                           required
                         >
-                          <option value="">Select rank</option>
+                          <option value="">{translate("Pilih pangkat", "Select rank")}</option>
                           {scrollRank.map((rank) => (
                             <option key={rank} value={rank}>
                               {rank}
@@ -1016,7 +1052,7 @@ async function handleExitAccount() {
                           htmlFor="user-visitor-position"
                           className="form-label"
                         >
-                          Position
+                          {translate("Jabatan", "Position")}
                         </label>
                         <input
                           id="user-visitor-position"
@@ -1029,7 +1065,7 @@ async function handleExitAccount() {
                               position: event.target.value.toUpperCase(),
                             }))
                           }
-                          placeholder="Enter position"
+                          placeholder={translate("Masukkan jabatan", "Enter position")}
                           required
                         />
                       </div>
@@ -1037,7 +1073,7 @@ async function handleExitAccount() {
 
                     <div className="form-field col-12 col-md-6">
                       <label htmlFor="user-visitor-phone" className="form-label">
-                        Phone
+                        {translate("Nomor HP", "Phone")}
                       </label>
                       <input
                         id="user-visitor-phone"
@@ -1050,7 +1086,7 @@ async function handleExitAccount() {
                             phone: event.target.value.toUpperCase(),
                           }))
                         }
-                        placeholder="Phone number"
+                        placeholder={translate("Nomor HP", "Phone number")}
                         required
                       />
                     </div>
@@ -1065,10 +1101,10 @@ async function handleExitAccount() {
                         onPicChange={(pic) =>
                           setVisitorForm((current) => ({ ...current, pic }))
                         }
-                        divisionLabel="Division"
-                        selectDivisionLabel="Select a division"
+                        divisionLabel={translate("Divisi", "Division")}
+                        selectDivisionLabel={translate("Pilih divisi", "Select a division")}
                         picLabel="PIC"
-                        selectPICLabel="Select a PIC"
+                        selectPICLabel={translate("Pilih PIC", "Select a PIC")}
                         divisionId="user-visitor-division"
                         picId="user-visitor-pic"
                       />
@@ -1079,13 +1115,13 @@ async function handleExitAccount() {
                         htmlFor="user-visitor-purpose"
                         className="form-label"
                       >
-                        Purpose
+                        {translate("Keperluan", "Purpose")}
                       </label>
                       <textarea
                         id="user-visitor-purpose"
                         className="form-control"
                         rows={3}
-                        placeholder="Reason for visiting"
+                        placeholder={translate("Keperluan kunjungan", "Reason for visiting")}
                         value={visitorForm.purpose}
                         onChange={(event) =>
                           setVisitorForm((current) => ({
@@ -1106,14 +1142,16 @@ async function handleExitAccount() {
                       onClick={() => setVisitorAction(null)}
                       disabled={actionLoading}
                     >
-                      Back
+                      {translate("Kembali", "Back")}
                     </button>
                     <button
                       type="submit"
                       className="btn btn-primary"
                       disabled={actionLoading}
                     >
-                      {actionLoading ? "Adding..." : "Add Visitor"}
+                      {actionLoading
+                        ? translate("Menambahkan...", "Adding...")
+                        : translate("Tambah Pengunjung", "Add Visitor")}
                     </button>
                   </div>
                 </form>
@@ -1132,8 +1170,8 @@ async function handleExitAccount() {
                     ←
                   </button>
                   <div>
-                    <h3>Cancel Visitor</h3>
-                    <p>Select a visitor to cancel.</p>
+                    <h3>{translate("Batalkan Pengunjung", "Cancel Visitor")}</h3>
+                    <p>{translate("Pilih pengunjung untuk dibatalkan.", "Select a visitor to cancel.")}</p>
                   </div>
                 </div>
                 <div className="visitor-selection-list">
@@ -1143,7 +1181,7 @@ async function handleExitAccount() {
                       visitor.status === "Meeting",
                   ).length === 0 ? (
                     <div className="no-action-visitor">
-                      No active visitors available.
+                      {translate("Tidak ada pengunjung aktif.", "No active visitors available.")}
                     </div>
                   ) : (
                     visitors
@@ -1197,7 +1235,12 @@ async function handleExitAccount() {
                   </button>
                   <div>
                     <h3>Change Visitor Status</h3>
-                    <p>Select a visitor and update their status.</p>
+                    <p>
+                      {translate(
+                        "Pilih pengunjung dan perbarui statusnya.",
+                        "Select a visitor and update their status.",
+                      )}
+                    </p>
                   </div>
                 </div>
                 <div className="visitor-selection-list">

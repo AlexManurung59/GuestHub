@@ -7,6 +7,7 @@ import {
   VISITOR_REFRESH_INTERVAL_MS,
   WAITING_REMINDER_THRESHOLD_MINUTES,
 } from "@/components/VisitorReminder";
+import { LanguageSwitcher, useLanguage } from "../language-provider";
 import "../admin/admin.css";
 
 
@@ -37,6 +38,7 @@ interface Visitor {
 
 export default function TvPage() {
   const router = useRouter();
+  const { language, translate } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -403,11 +405,11 @@ export default function TvPage() {
 
             <div>
               <h1 className="tv-title mb-1">
-                Visitor Information
+                {translate("Informasi Pengunjung", "Visitor Information")}
               </h1>
 
               <p className="tv-subtitle mb-0">
-                Today&apos;s guests on-site
+                {translate("Tamu di lokasi hari ini", "Today's guests on-site")}
               </p>
             </div>
 
@@ -417,17 +419,19 @@ export default function TvPage() {
               CLOCK
           =================================================== */}
 
-          {now && (
+          <div className="d-flex align-items-center gap-3">
+            <LanguageSwitcher />
+            {now && (
             <div className="clock-box text-end">
 
               <div className="clock-time">
-                {now.toLocaleTimeString("id-ID", {
+                {now.toLocaleTimeString(language === "id" ? "id-ID" : "en-US", {
                   hour12: false,
                 })}
               </div>
 
               <div className="clock-date">
-                {now.toLocaleDateString("id-ID", {
+                {now.toLocaleDateString(language === "id" ? "id-ID" : "en-US", {
                   weekday: "long",
                   day: "numeric",
                   month: "long",
@@ -437,6 +441,7 @@ export default function TvPage() {
 
             </div>
           )}
+          </div>
 
         </div>
 
@@ -452,12 +457,14 @@ export default function TvPage() {
               className="alarm-enable-button"
               onClick={enableAlarm}
             >
-              🔔 Enable Visitor Alarm
+              🔔 {translate("Aktifkan Alarm Pengunjung", "Enable Visitor Alarm")}
             </button>
 
             <p className="alarm-help-text">
-              Click this button once to enable sound
-              on the TV.
+              {translate(
+                "Klik tombol ini sekali untuk mengaktifkan suara TV.",
+                "Click this button once to enable sound on the TV.",
+              )}
             </p>
 
           </div>
@@ -480,23 +487,24 @@ export default function TvPage() {
 
                 <div className="alarm-label">
                   {displayedAlarmVisitor
-                    ? "VISITOR REMINDER"
-                    : "ADMINISTRATOR ALERT"}
+                    ? translate("PENGINGAT PENGUNJUNG", "VISITOR REMINDER")
+                    : translate("PERINGATAN ADMINISTRATOR", "ADMINISTRATOR ALERT")}
                 </div>
 
                 <h2 className="alarm-title">
-                  {displayedAlarmVisitor?.name ?? "Please check the visitor area"}
+                  {displayedAlarmVisitor?.name ??
+                    translate("Mohon periksa area pengunjung", "Please check the visitor area")}
                 </h2>
 
                 <p className="alarm-company">
                   {displayedAlarmVisitor?.company ??
-                    "Alarm triggered from the admin page"}
+                    translate("Alarm diaktifkan dari halaman admin", "Alarm triggered from the admin page")}
                 </p>
 
                 <div className="alarm-details">
 
                   <div>
-                    <span>Division</span>
+                    <span>{translate("Divisi", "Division")}</span>
                     <strong>
                       {displayedAlarmVisitor?.division || "—"}
                     </strong>
@@ -510,14 +518,14 @@ export default function TvPage() {
                   </div>
 
                   <div>
-                    <span>Check-in</span>
+                    <span>{translate("Waktu masuk", "Check-in")}</span>
                     <strong>
                       {displayedAlarmVisitor?.check_in || "—"}
                     </strong>
                   </div>
 
                   <div>
-                    <span>Purpose</span>
+                    <span>{translate("Keperluan", "Purpose")}</span>
                     <strong>
                       {displayedAlarmVisitor?.purpose || "—"}
                     </strong>
@@ -527,12 +535,22 @@ export default function TvPage() {
 
                 <p className="alarm-message">
                   {displayedAlarmVisitor
-                    ? `This visitor has been waiting for more than ${
+                    ? translate(
+                      `Pengunjung ini telah menunggu lebih dari ${
                         remoteAlarmActive
                           ? getWaitingMinutes(displayedAlarmVisitor.check_in)
                           : alarmWaitingMinutes
-                      } minutes.`
-                    : "An administrator has triggered the TV alarm."}
+                      } menit.`,
+                      `This visitor has been waiting for more than ${
+                        remoteAlarmActive
+                          ? getWaitingMinutes(displayedAlarmVisitor.check_in)
+                          : alarmWaitingMinutes
+                      } minutes.`,
+                    )
+                    : translate(
+                      "Administrator telah mengaktifkan alarm TV.",
+                      "An administrator has triggered the TV alarm.",
+                    )}
                 </p>
 
                 <button
@@ -540,7 +558,7 @@ export default function TvPage() {
                   className="alarm-dismiss-button"
                   onClick={dismissAlarm}
                 >
-                  ✓ Acknowledge
+                  ✓ {translate("Mengerti", "Acknowledge")}
                 </button>
 
               </div>
@@ -610,7 +628,7 @@ export default function TvPage() {
                           <li className="mb-3 d-flex justify-content-between">
 
                             <span className="label">
-                              DIVISION
+                              {translate("DIVISI", "DIVISION")}
                             </span>
 
                             <span className="value">
@@ -634,7 +652,7 @@ export default function TvPage() {
                           <li className="mb-3 d-flex justify-content-between">
 
                             <span className="label">
-                              CONTACT
+                              {translate("KONTAK", "CONTACT")}
                             </span>
 
                             <span className="value">
@@ -656,7 +674,7 @@ export default function TvPage() {
                           <li className="d-flex justify-content-between align-items-center pt-2 status-row">
 
                             <span className="label fw-semibold">
-                              Status
+                              {translate("Status", "Status")}
                             </span>
 
                             <span
@@ -666,7 +684,18 @@ export default function TvPage() {
                                 color: sc.text,
                               }}
                             >
-                              {visitor.status}
+                              {translate(
+                                visitor.status === "Waiting"
+                                  ? "Menunggu"
+                                  : visitor.status === "Meeting"
+                                    ? "Bertemu"
+                                    : visitor.status === "Completed"
+                                      ? "Selesai"
+                                      : visitor.status === "Cancelled"
+                                        ? "Dibatalkan"
+                                        : visitor.status,
+                                visitor.status,
+                              )}
                             </span>
 
                           </li>
@@ -694,7 +723,7 @@ export default function TvPage() {
           <div className="text-center empty-state py-5">
 
             <p className="mb-0">
-              Belum ada tamu hari ini
+              {translate("Belum ada tamu hari ini", "No visitors today")}
             </p>
 
           </div>
@@ -710,15 +739,15 @@ export default function TvPage() {
           <div className="apple-menu-panel">
             <div className="apple-menu-header">
               <div>
-                <span>TV Menu</span>
-                <small>Navigate back</small>
+                <span>{translate("Menu TV", "TV Menu")}</span>
+                <small>{translate("Navigasi", "Navigate")}</small>
               </div>
 
               <button
                 type="button"
                 className="menu-close-button"
                 onClick={() => setMenuOpen(false)}
-                aria-label="Close menu"
+                aria-label={translate("Tutup menu", "Close menu")}
               >
                 ×
               </button>
@@ -734,7 +763,7 @@ export default function TvPage() {
                 }}
               >
                 <span className="menu-icon visitor-icon">🏠</span>
-                <span>Back to Admin</span>
+                <span>{translate("Kembali ke Admin", "Back to Admin")}</span>
               </button>
 
               <button
@@ -746,7 +775,7 @@ export default function TvPage() {
                 }}
               >
                 <span className="menu-icon users-icon">👤</span>
-                <span>Back to User</span>
+                <span>{translate("Kembali ke Pengguna", "Back to User")}</span>
               </button>
             </div>
           </div>
@@ -756,7 +785,7 @@ export default function TvPage() {
           type="button"
           className={`floating-menu-button ${menuOpen ? "floating-menu-button-open" : ""}`}
           onClick={() => setMenuOpen((current) => !current)}
-          aria-label="Open TV menu"
+          aria-label={translate("Buka menu TV", "Open TV menu")}
           aria-expanded={menuOpen}
         >
           {menuOpen ? "×" : "☰"}
@@ -1048,7 +1077,7 @@ export default function TvPage() {
           color:
             rgba(255,255,255,0.7);
 
-          font-size: 0.9rem;
+          font-size: 1.1rem;
 
           font-weight: 800;
 
@@ -1063,9 +1092,9 @@ export default function TvPage() {
 
           font-size:
             clamp(
-              2rem,
-              3vw,
-              3.2rem
+              2.2rem,
+              3.2vw,
+              3.5rem
             );
 
           font-weight: 800;
@@ -1078,7 +1107,7 @@ export default function TvPage() {
           color:
             rgba(255,255,255,0.75);
 
-          font-size: 1.2rem;
+          font-size: 1.35rem;
 
           margin-bottom: 1.2rem;
         }
@@ -1108,21 +1137,21 @@ export default function TvPage() {
           color:
             rgba(255,255,255,0.6);
 
-          font-size: 1.05rem;
+          font-size: 1.2rem;
         }
 
 
         .alarm-details strong {
           color: #fff;
 
-          font-size: 1.3rem;
+          font-size: 1.5rem;
         }
 
 
         .alarm-message {
           color: #fff;
 
-          font-size: 1.15rem;
+          font-size: 3rem;
 
           font-weight: 600;
 
@@ -1138,6 +1167,7 @@ export default function TvPage() {
           color: #991b1b;
 
           font-weight: 800;
+          font-size: 1.1rem;
 
           padding:
             0.7rem 1.4rem;
@@ -1666,7 +1696,7 @@ export default function TvPage() {
 
 
           .alarm-company {
-            font-size: 1rem;
+            font-size: 1.1rem;
           }
 
 
@@ -1678,16 +1708,16 @@ export default function TvPage() {
           }
 
           .alarm-details span {
-            font-size: 1rem;
+            font-size: 1.05rem;
           }
 
           .alarm-details strong {
-            font-size: 1.15rem;
+            font-size: 1.25rem;
           }
 
 
           .alarm-message {
-            font-size: 1.05rem;
+            font-size: 1.15rem;
           }
 
         }
