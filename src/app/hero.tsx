@@ -15,10 +15,11 @@ export default function Hero({ registeredVisitorId }: HeroProps) {
   return (
     <div className={`position-relative d-flex align-items-center ${styles.heroContainer}`}>
       <Image
-        src="/preview.jpg"
+        src="/aa.jpg"
         alt="Kapal kontainer MCS Internasional"
         fill
-        priority
+        sizes="100vw"
+        preload
         className={`position-absolute top-0 start-0 ${styles.heroImage}`}
       />
       <div className={`position-absolute top-0 start-0 w-100 h-100 ${styles.overlay}`} />
@@ -39,7 +40,6 @@ export default function Hero({ registeredVisitorId }: HeroProps) {
               alt="PT MCS Internasional"
               fill
               className={styles.logoImage}
-              priority
             />
           </Link>
           <h1 className={styles.heroTitle}>

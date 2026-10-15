@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import DivisionPicFields from "@/components/DivisionPicFields";
 import WaitingTimer from "@/components/WaitingTimer";
+import { scrollRank } from "@/data/scroll";
 import { VISITOR_REFRESH_INTERVAL_MS } from "@/components/VisitorReminder";
 import "../admin/admin.css";
 import { useRouter } from "next/navigation";
@@ -29,21 +30,23 @@ interface Visitor {
 interface VisitorForm {
   name: string;
   company: string;
-  vessel: string;
   phone: string;
   division: string;
   pic: string;
   purpose: string;
+  rank: string;
+  position: string;
 }
 
 const emptyVisitorForm: VisitorForm = {
   name: "",
   company: "",
-  vessel: "",
   phone: "",
   division: "",
   pic: "",
   purpose: "",
+  rank: "",
+  position: "",
 };
 
 function isVisitor(value: unknown): value is Visitor {
@@ -102,9 +105,9 @@ export default function UserPage() {
   const [visitorPanelOpen, setVisitorPanelOpen] = useState(false);
   const [visitorAction, setVisitorAction] = useState<VisitorAction>(null);
   const [visitorForm, setVisitorForm] = useState<VisitorForm>(emptyVisitorForm);
-  const [visitorType, setVisitorType] = useState<"company" | "sailor">(
-    "company",
-  );
+  const [visitorType, setVisitorType] = useState<
+    "SEAFARER" | "GUEST" | ""
+  >("");
   const [actionLoading, setActionLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
   const [actionError, setActionError] = useState("");
@@ -250,7 +253,20 @@ export default function UserPage() {
       const response = await fetch("/api/visitors", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(visitorForm),
+        body: JSON.stringify({
+          ...visitorForm,
+          name: visitorForm.name.toUpperCase(),
+          company: visitorType === "GUEST" ? visitorForm.company : null,
+          vessel: null,
+          visitorType,
+          rank: visitorType === "SEAFARER" ? visitorForm.rank : null,
+          position:
+            visitorType === "GUEST" ||
+            (visitorType === "SEAFARER" && visitorForm.rank === "OTHERS")
+              ? visitorForm.position
+              : null,
+          purpose: visitorForm.purpose.toUpperCase(),
+        }),
       });
       const data: unknown = await response.json();
 
@@ -274,7 +290,7 @@ export default function UserPage() {
           : visitorForm.name;
       setActionMessage(`Visitor "${visitorName}" was added successfully.`);
       setVisitorForm(emptyVisitorForm);
-      setVisitorType("company");
+      setVisitorType("");
       await loadVisitors();
       setVisitorAction(null);
     } catch (error) {
@@ -867,7 +883,7 @@ async function handleExitAccount() {
                         onChange={(event) =>
                           setVisitorForm((current) => ({
                             ...current,
-                            name: event.target.value,
+                            name: event.target.value.toUpperCase(),
                           }))
                         }
                         placeholder="Enter visitor name"
@@ -886,78 +902,138 @@ async function handleExitAccount() {
                           <input
                             className="btn-check"
                             type="radio"
-                            id="user-visitor-company"
+                            id="user-visitor-seafarer"
                             name="userVisitorType"
-                            checked={visitorType === "company"}
+                            value="SEAFARER"
+                            checked={visitorType === "SEAFARER"}
+                            required
                             onChange={() => {
-                              setVisitorType("company");
+                              setVisitorType("SEAFARER");
                               setVisitorForm((current) => ({
                                 ...current,
-                                vessel: "",
+                                company: "",
+                                rank: "",
+                                position: "",
                               }));
                             }}
                           />
                           <label
                             className="btn btn-outline-primary"
-                            htmlFor="user-visitor-company"
+                            htmlFor="user-visitor-seafarer"
                           >
-                            Company
+                            Seafarer
                           </label>
                           <input
                             className="btn-check"
                             type="radio"
-                            id="user-visitor-sailor"
+                            id="user-visitor-guest"
                             name="userVisitorType"
-                            checked={visitorType === "sailor"}
+                            value="GUEST"
+                            checked={visitorType === "GUEST"}
                             onChange={() => {
-                              setVisitorType("sailor");
+                              setVisitorType("GUEST");
                               setVisitorForm((current) => ({
                                 ...current,
-                                company: "",
+                                rank: "",
+                                position: "",
                               }));
                             }}
                           />
                           <label
                             className="btn btn-outline-primary"
-                            htmlFor="user-visitor-sailor"
+                            htmlFor="user-visitor-guest"
                           >
-                            Sailor / Onboard
+                            Guest
                           </label>
                         </div>
                       </fieldset>
                     </div>
 
-                    <div className="form-field col-12 col-md-6">
-                      <label
-                        htmlFor="user-visitor-organization"
-                        className="form-label"
-                      >
-                        {visitorType === "company" ? "Company" : "Vessel"}
-                      </label>
-                      <input
-                        id="user-visitor-organization"
-                        className="form-control"
-                        type="text"
-                        value={
-                          visitorType === "company"
-                            ? visitorForm.company
-                            : visitorForm.vessel
-                        }
-                        onChange={(event) =>
-                          setVisitorForm((current) => ({
-                            ...current,
-                            [visitorType === "company" ? "company" : "vessel"]:
-                              event.target.value,
-                          }))
-                        }
-                        placeholder={
-                          visitorType === "company"
-                            ? "Company name"
-                            : "Vessel name"
-                        }
-                        required
-                      />
-                    </div>
+                    {visitorType === "GUEST" && (
+                      <div className="form-field col-12 col-md-6">
+                        <label
+                          htmlFor="user-visitor-company-name"
+                          className="form-label"
+                        >
+                          Company
+                        </label>
+                        <input
+                          id="user-visitor-company-name"
+                          className="form-control"
+                          type="text"
+                          value={visitorForm.company}
+                          onChange={(event) =>
+                            setVisitorForm((current) => ({
+                              ...current,
+                              company: event.target.value.toUpperCase(),
+                            }))
+                          }
+                          placeholder="Company name"
+                          required
+                        />
+                      </div>
+                    )}
+
+                    {visitorType === "SEAFARER" && (
+                      <div className="form-field col-12 col-md-6">
+                        <label
+                          htmlFor="user-visitor-rank"
+                          className="form-label"
+                        >
+                          Rank
+                        </label>
+                        <select
+                          id="user-visitor-rank"
+                          className="form-select"
+                          value={visitorForm.rank}
+                          onChange={(event) =>
+                            setVisitorForm((current) => ({
+                              ...current,
+                              rank: event.target.value,
+                              position:
+                                event.target.value === "OTHERS"
+                                  ? current.position
+                                  : "",
+                            }))
+                          }
+                          required
+                        >
+                          <option value="">Select rank</option>
+                          {scrollRank.map((rank) => (
+                            <option key={rank} value={rank}>
+                              {rank}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    {(visitorType === "GUEST" ||
+                      (visitorType === "SEAFARER" &&
+                        visitorForm.rank === "OTHERS")) && (
+                      <div className="form-field col-12 col-md-6">
+                        <label
+                          htmlFor="user-visitor-position"
+                          className="form-label"
+                        >
+                          Position
+                        </label>
+                        <input
+                          id="user-visitor-position"
+                          className="form-control"
+                          type="text"
+                          value={visitorForm.position}
+                          onChange={(event) =>
+                            setVisitorForm((current) => ({
+                              ...current,
+                              position: event.target.value.toUpperCase(),
+                            }))
+                          }
+                          placeholder="Enter position"
+                          required
+                        />
+                      </div>
+                    )}
 
                     <div className="form-field col-12 col-md-6">
                       <label htmlFor="user-visitor-phone" className="form-label">
@@ -971,10 +1047,11 @@ async function handleExitAccount() {
                         onChange={(event) =>
                           setVisitorForm((current) => ({
                             ...current,
-                            phone: event.target.value,
+                            phone: event.target.value.toUpperCase(),
                           }))
                         }
                         placeholder="Phone number"
+                        required
                       />
                     </div>
 
@@ -1016,6 +1093,8 @@ async function handleExitAccount() {
                             purpose: event.target.value,
                           }))
                         }
+                        style={{ textTransform: "uppercase" }}
+                        required
                       />
                     </div>
                   </div>

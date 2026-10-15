@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import DivisionPicFields from "@/components/DivisionPicFields";
 import WaitingTimer from "@/components/WaitingTimer";
+import { scrollRank } from "@/data/scroll";
 import VisitorReminder, {
   WAITING_REMINDER_THRESHOLD_MINUTES,
   VISITOR_REFRESH_INTERVAL_MS,
@@ -33,21 +34,23 @@ interface Visitor {
 interface VisitorForm {
   name: string;
   company: string;
-  vessel: string;
   phone: string;
   division: string;
   pic: string;
   purpose: string;
+  rank: string;
+  position: string;
 }
 
 const emptyVisitorForm: VisitorForm = {
   name: "",
   company: "",
-  vessel: "",
   phone: "",
   division: "",
   pic: "",
   purpose: "",
+  rank: "",
+  position: "",
 };
 
 
@@ -99,9 +102,9 @@ export default function AdminPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
   const [actionError, setActionError] = useState("");
-  const [adminVisitorType, setAdminVisitorType] = useState<"company" | "sailor">(
-    "company",
-  );
+  const [adminVisitorType, setAdminVisitorType] = useState<
+    "SEAFARER" | "GUEST" | ""
+  >("");
   const handleExportVisitors = () => {
   window.location.href = "/api/visitors/export";
 
@@ -366,7 +369,21 @@ async function handleCancelVisitor(visitorId: number) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(visitorForm),
+        body: JSON.stringify({
+          ...visitorForm,
+          name: visitorForm.name.toUpperCase(),
+          company: adminVisitorType === "GUEST" ? visitorForm.company : null,
+          vessel: null,
+          visitorType: adminVisitorType,
+          rank: adminVisitorType === "SEAFARER" ? visitorForm.rank : null,
+          position:
+            adminVisitorType === "GUEST" ||
+            (adminVisitorType === "SEAFARER" &&
+              visitorForm.rank === "OTHERS")
+              ? visitorForm.position
+              : null,
+          purpose: visitorForm.purpose.toUpperCase(),
+        }),
       });
 
       const data: unknown = await response.json();
@@ -390,7 +407,7 @@ async function handleCancelVisitor(visitorId: number) {
           : visitorForm.name;
       setActionMessage(`Visitor "${visitorName}" was added successfully.`);
       setVisitorForm(emptyVisitorForm);
-      setAdminVisitorType("company");
+      setAdminVisitorType("");
       await loadVisitors();
       setVisitorAction(null);
     } catch (error) {
@@ -1050,7 +1067,7 @@ async function handleExitAccount() {
                   onChange={(event) =>
     setVisitorForm({
       ...visitorForm,
-      name: event.target.value,
+      name: event.target.value.toUpperCase(),
                     })
                   }
                   required
@@ -1064,71 +1081,123 @@ async function handleExitAccount() {
                     <input
                       className="btn-check"
                       type="radio"
-                      id="admin-visitor-company"
+                      id="admin-visitor-seafarer"
                       name="adminVisitorType"
-                      checked={adminVisitorType === "company"}
+                      value="SEAFARER"
+                      checked={adminVisitorType === "SEAFARER"}
+                      required
                       onChange={() => {
-                        setAdminVisitorType("company");
+                        setAdminVisitorType("SEAFARER");
                         setVisitorForm((current) => ({
                           ...current,
-                          vessel: "",
+                          company: "",
+                          rank: "",
+                          position: "",
                         }));
                       }}
                     />
-                    <label className="btn btn-outline-primary" htmlFor="admin-visitor-company">
-                      Company
+                    <label className="btn btn-outline-primary" htmlFor="admin-visitor-seafarer">
+                      Seafarer
                     </label>
                     <input
                       className="btn-check"
                       type="radio"
-                      id="admin-visitor-sailor"
+                      id="admin-visitor-guest"
                       name="adminVisitorType"
-                      checked={adminVisitorType === "sailor"}
+                      value="GUEST"
+                      checked={adminVisitorType === "GUEST"}
                       onChange={() => {
-                        setAdminVisitorType("sailor");
+                        setAdminVisitorType("GUEST");
                         setVisitorForm((current) => ({
                           ...current,
-                          company: "",
+                          rank: "",
+                          position: "",
                         }));
                       }}
                     />
-                    <label className="btn btn-outline-primary" htmlFor="admin-visitor-sailor">
-                      Sailor / Onboard
+                    <label className="btn btn-outline-primary" htmlFor="admin-visitor-guest">
+                      Guest
                     </label>
                   </div>
                 </fieldset>
               </div>
 
-              <div className="form-field col-12 col-md-6">
-                <label htmlFor="visitor-organization" className="form-label">
-                  {adminVisitorType === "company" ? "Company" : "Vessel"}
-                </label>
-                <input
-                  id="visitor-organization"
-                  key={adminVisitorType}
-                  className="form-control"
-                  type="text"
-                  name={adminVisitorType === "company" ? "company" : "vessel"}
-                  placeholder={
-                    adminVisitorType === "company"
-                      ? "Company name"
-                      : "Vessel name"
-                  }
-                  value={
-                    adminVisitorType === "company"
-                      ? visitorForm.company
-                      : visitorForm.vessel
-                  }
-                  onChange={(event) =>
-                    setVisitorForm((current) => ({
-                      ...current,
-                      [adminVisitorType === "company" ? "company" : "vessel"]:
-                        event.target.value,
-                    }))
-                  }
-                  required
-                />
-              </div>
+              {adminVisitorType === "GUEST" && (
+                <div className="form-field col-12 col-md-6">
+                  <label htmlFor="visitor-company" className="form-label">
+                    Company
+                  </label>
+                  <input
+                    id="visitor-company"
+                    className="form-control"
+                    type="text"
+                    value={visitorForm.company}
+                    onChange={(event) =>
+                      setVisitorForm((current) => ({
+                        ...current,
+                        company: event.target.value.toUpperCase(),
+                      }))
+                    }
+                    placeholder="Company name"
+                    required
+                  />
+                </div>
+              )}
+
+              {adminVisitorType === "SEAFARER" && (
+                <div className="form-field col-12 col-md-6">
+                  <label htmlFor="visitor-rank" className="form-label">
+                    Rank
+                  </label>
+                  <select
+                    id="visitor-rank"
+                    className="form-select"
+                    value={visitorForm.rank}
+                    onChange={(event) =>
+                      setVisitorForm((current) => ({
+                        ...current,
+                        rank: event.target.value,
+                        position:
+                          event.target.value === "OTHERS"
+                            ? current.position
+                            : "",
+                      }))
+                    }
+                    required
+                  >
+                    <option value="">Select rank</option>
+                    {scrollRank.map((rank) => (
+                      <option key={rank} value={rank}>
+                        {rank}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {(adminVisitorType === "GUEST" ||
+                (adminVisitorType === "SEAFARER" &&
+                  visitorForm.rank === "OTHERS")) && (
+                <div className="form-field col-12 col-md-6">
+                  <label htmlFor="visitor-position" className="form-label">
+                    Position
+                  </label>
+                  <input
+                    id="visitor-position"
+                    className="form-control"
+                    type="text"
+                    value={visitorForm.position}
+                    onChange={(event) =>
+                      setVisitorForm((current) => ({
+                        ...current,
+                        position: event.target.value.toUpperCase(),
+                      }))
+                    }
+                    placeholder="Enter position"
+                    required
+                  />
+                </div>
+              )}
 
               <div className="form-field col-12 col-md-6">
                 <label htmlFor="visitor-phone" className="form-label">
@@ -1145,9 +1214,10 @@ async function handleExitAccount() {
                   onChange={(event) =>
                     setVisitorForm((current) => ({
                       ...current,
-                      phone: event.target.value,
+                      phone: event.target.value.toUpperCase(),
                     }))
                   }
+                  required
                 />
               </div>
 
@@ -1188,6 +1258,8 @@ async function handleExitAccount() {
                       purpose: event.target.value,
                     }))
                   }
+                  style={{ textTransform: "uppercase" }}
+                  required
                 />
               </div>
             </div>
