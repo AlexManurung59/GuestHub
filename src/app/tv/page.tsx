@@ -1253,7 +1253,7 @@ export default function TvPage() {
 
           animation:
             visitorScroll
-            11s linear infinite; // Speed Card
+            14s linear infinite; // Speed Card
         }
 
 
