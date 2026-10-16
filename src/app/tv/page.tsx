@@ -40,7 +40,33 @@ export default function TvPage() {
   const router = useRouter();
   const { language, translate } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleFullscreenChange() {
+      setIsFullscreen(document.fullscreenElement !== null);
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    handleFullscreenChange();
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch (error) {
+      console.error("Unable to toggle fullscreen:", error);
+    }
+  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -396,7 +422,7 @@ export default function TvPage() {
           <div className="d-flex align-items-center gap-4">
 
             <Image
-              src="/a.png"
+              src="/MCSI.png"
               alt="Logo"
               width={90}
               height={90}
@@ -754,6 +780,24 @@ export default function TvPage() {
             </div>
 
             <div className="apple-menu-grid">
+              <button
+                type="button"
+                className="menu-item"
+                onClick={() => {
+                  setMenuOpen(false);
+                  void toggleFullscreen();
+                }}
+              >
+                <span className="menu-icon tv-icon">
+                  {isFullscreen ? "↙" : "⛶"}
+                </span>
+                <span>
+                  {isFullscreen
+                    ? translate("Keluar dari layar penuh", "Exit Fullscreen")
+                    : translate("Layar penuh", "Fullscreen")}
+                </span>
+              </button>
+
               <button
                 type="button"
                 className="menu-item"
@@ -1209,7 +1253,7 @@ export default function TvPage() {
 
           animation:
             visitorScroll
-            35s linear infinite; // Speed Card
+            10s linear infinite; // Speed Card
         }
 
 

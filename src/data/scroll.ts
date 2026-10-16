@@ -48,7 +48,16 @@ export const scrollPIC = [
     "DWI DAVID",
     "ENDAH NUR WIDHIANINGSIH",
     "CHINDY",
-    "ARI WIBOWO"
+    "ARI WIBOWO",
+    "DEA",
+    "IRHAM",
+    "FAJRINA",
+    "ALEX",
+    "AJRINA",
+    "FAHRI",
+    "ALI AKBAR",
+    "INTAN",
+    "MAULANA"
 ];
 
 export function getPICByDivision(division: string): string[] {
@@ -56,19 +65,19 @@ export function getPICByDivision(division: string): string[] {
         return scrollPIC;
     }
     else if (division === "ASAHI" || division === "PCSI" ) {
-        return ["HARNIFIRA"];
+        return ["HARNIFIRA","FAJRINA"];
     }
     else if (division === "ASDP" || division === "ASL" || division === "HTC" || division === "LISI") {
-        return ["DWI LAVENIA"];
+        return ["DWI LAVENIA","AJRINA","FAHRI"];
     }
     else if ( division === "EDN" || division === "ESM") {
-    return ["DWI DAVID"];
+    return ["DWI DAVID","ALEX","MAULANA"];
     }
     else if (division === "CRUISE" || division === "LAND BASE" || division === "ICM") {
-        return ["ALMUKAROM", "ENDAH NUR WIDHIANINGSIH"];
+        return ["ALMUKAROM", "ENDAH NUR WIDHIANINGSIH","IRHAM","DEA","INTAN","ALI AKBAR"];
     }
     else if (division === "CREWING") {
-        return ["CHINDY"];
+        return ["CHINDY","MAULANA"];
     }
     else {
         return [];
