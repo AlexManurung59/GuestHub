@@ -28,6 +28,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * 
  */
 export type AlarmControl = $Result.DefaultSelection<Prisma.$AlarmControlPayload>
+/**
+ * Model EndOfWorkAlarm
+ * 
+ */
+export type EndOfWorkAlarm = $Result.DefaultSelection<Prisma.$EndOfWorkAlarmPayload>
 
 /**
  * Enums
@@ -198,6 +203,16 @@ export class PrismaClient<
     * ```
     */
   get alarmControl(): Prisma.AlarmControlDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.endOfWorkAlarm`: Exposes CRUD operations for the **EndOfWorkAlarm** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EndOfWorkAlarms
+    * const endOfWorkAlarms = await prisma.endOfWorkAlarm.findMany()
+    * ```
+    */
+  get endOfWorkAlarm(): Prisma.EndOfWorkAlarmDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -647,7 +662,8 @@ export namespace Prisma {
   export const ModelName: {
     Visitor: 'Visitor',
     User: 'User',
-    AlarmControl: 'AlarmControl'
+    AlarmControl: 'AlarmControl',
+    EndOfWorkAlarm: 'EndOfWorkAlarm'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -663,7 +679,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "visitor" | "user" | "alarmControl"
+      modelProps: "visitor" | "user" | "alarmControl" | "endOfWorkAlarm"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -865,6 +881,72 @@ export namespace Prisma {
           }
         }
       }
+      EndOfWorkAlarm: {
+        payload: Prisma.$EndOfWorkAlarmPayload<ExtArgs>
+        fields: Prisma.EndOfWorkAlarmFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EndOfWorkAlarmFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EndOfWorkAlarmFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload>
+          }
+          findFirst: {
+            args: Prisma.EndOfWorkAlarmFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EndOfWorkAlarmFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload>
+          }
+          findMany: {
+            args: Prisma.EndOfWorkAlarmFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload>[]
+          }
+          create: {
+            args: Prisma.EndOfWorkAlarmCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload>
+          }
+          createMany: {
+            args: Prisma.EndOfWorkAlarmCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.EndOfWorkAlarmDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload>
+          }
+          update: {
+            args: Prisma.EndOfWorkAlarmUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload>
+          }
+          deleteMany: {
+            args: Prisma.EndOfWorkAlarmDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EndOfWorkAlarmUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.EndOfWorkAlarmUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EndOfWorkAlarmPayload>
+          }
+          aggregate: {
+            args: Prisma.EndOfWorkAlarmAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEndOfWorkAlarm>
+          }
+          groupBy: {
+            args: Prisma.EndOfWorkAlarmGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EndOfWorkAlarmGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EndOfWorkAlarmCountArgs<ExtArgs>
+            result: $Utils.Optional<EndOfWorkAlarmCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -991,6 +1073,7 @@ export namespace Prisma {
     visitor?: VisitorOmit
     user?: UserOmit
     alarmControl?: AlarmControlOmit
+    endOfWorkAlarm?: EndOfWorkAlarmOmit
   }
 
   /* Types for Logging */
@@ -3986,6 +4069,931 @@ export namespace Prisma {
 
 
   /**
+   * Model EndOfWorkAlarm
+   */
+
+  export type AggregateEndOfWorkAlarm = {
+    _count: EndOfWorkAlarmCountAggregateOutputType | null
+    _avg: EndOfWorkAlarmAvgAggregateOutputType | null
+    _sum: EndOfWorkAlarmSumAggregateOutputType | null
+    _min: EndOfWorkAlarmMinAggregateOutputType | null
+    _max: EndOfWorkAlarmMaxAggregateOutputType | null
+  }
+
+  export type EndOfWorkAlarmAvgAggregateOutputType = {
+    id: number | null
+    revision: number | null
+  }
+
+  export type EndOfWorkAlarmSumAggregateOutputType = {
+    id: number | null
+    revision: number | null
+  }
+
+  export type EndOfWorkAlarmMinAggregateOutputType = {
+    id: number | null
+    active: boolean | null
+    alarmDate: string | null
+    dismissedDate: string | null
+    revision: number | null
+  }
+
+  export type EndOfWorkAlarmMaxAggregateOutputType = {
+    id: number | null
+    active: boolean | null
+    alarmDate: string | null
+    dismissedDate: string | null
+    revision: number | null
+  }
+
+  export type EndOfWorkAlarmCountAggregateOutputType = {
+    id: number
+    active: number
+    alarmDate: number
+    dismissedDate: number
+    revision: number
+    _all: number
+  }
+
+
+  export type EndOfWorkAlarmAvgAggregateInputType = {
+    id?: true
+    revision?: true
+  }
+
+  export type EndOfWorkAlarmSumAggregateInputType = {
+    id?: true
+    revision?: true
+  }
+
+  export type EndOfWorkAlarmMinAggregateInputType = {
+    id?: true
+    active?: true
+    alarmDate?: true
+    dismissedDate?: true
+    revision?: true
+  }
+
+  export type EndOfWorkAlarmMaxAggregateInputType = {
+    id?: true
+    active?: true
+    alarmDate?: true
+    dismissedDate?: true
+    revision?: true
+  }
+
+  export type EndOfWorkAlarmCountAggregateInputType = {
+    id?: true
+    active?: true
+    alarmDate?: true
+    dismissedDate?: true
+    revision?: true
+    _all?: true
+  }
+
+  export type EndOfWorkAlarmAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EndOfWorkAlarm to aggregate.
+     */
+    where?: EndOfWorkAlarmWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EndOfWorkAlarms to fetch.
+     */
+    orderBy?: EndOfWorkAlarmOrderByWithRelationInput | EndOfWorkAlarmOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EndOfWorkAlarmWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EndOfWorkAlarms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EndOfWorkAlarms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EndOfWorkAlarms
+    **/
+    _count?: true | EndOfWorkAlarmCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EndOfWorkAlarmAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EndOfWorkAlarmSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EndOfWorkAlarmMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EndOfWorkAlarmMaxAggregateInputType
+  }
+
+  export type GetEndOfWorkAlarmAggregateType<T extends EndOfWorkAlarmAggregateArgs> = {
+        [P in keyof T & keyof AggregateEndOfWorkAlarm]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEndOfWorkAlarm[P]>
+      : GetScalarType<T[P], AggregateEndOfWorkAlarm[P]>
+  }
+
+
+
+
+  export type EndOfWorkAlarmGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EndOfWorkAlarmWhereInput
+    orderBy?: EndOfWorkAlarmOrderByWithAggregationInput | EndOfWorkAlarmOrderByWithAggregationInput[]
+    by: EndOfWorkAlarmScalarFieldEnum[] | EndOfWorkAlarmScalarFieldEnum
+    having?: EndOfWorkAlarmScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EndOfWorkAlarmCountAggregateInputType | true
+    _avg?: EndOfWorkAlarmAvgAggregateInputType
+    _sum?: EndOfWorkAlarmSumAggregateInputType
+    _min?: EndOfWorkAlarmMinAggregateInputType
+    _max?: EndOfWorkAlarmMaxAggregateInputType
+  }
+
+  export type EndOfWorkAlarmGroupByOutputType = {
+    id: number
+    active: boolean
+    alarmDate: string | null
+    dismissedDate: string | null
+    revision: number
+    _count: EndOfWorkAlarmCountAggregateOutputType | null
+    _avg: EndOfWorkAlarmAvgAggregateOutputType | null
+    _sum: EndOfWorkAlarmSumAggregateOutputType | null
+    _min: EndOfWorkAlarmMinAggregateOutputType | null
+    _max: EndOfWorkAlarmMaxAggregateOutputType | null
+  }
+
+  type GetEndOfWorkAlarmGroupByPayload<T extends EndOfWorkAlarmGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EndOfWorkAlarmGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EndOfWorkAlarmGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EndOfWorkAlarmGroupByOutputType[P]>
+            : GetScalarType<T[P], EndOfWorkAlarmGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EndOfWorkAlarmSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    active?: boolean
+    alarmDate?: boolean
+    dismissedDate?: boolean
+    revision?: boolean
+  }, ExtArgs["result"]["endOfWorkAlarm"]>
+
+
+
+  export type EndOfWorkAlarmSelectScalar = {
+    id?: boolean
+    active?: boolean
+    alarmDate?: boolean
+    dismissedDate?: boolean
+    revision?: boolean
+  }
+
+  export type EndOfWorkAlarmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "active" | "alarmDate" | "dismissedDate" | "revision", ExtArgs["result"]["endOfWorkAlarm"]>
+
+  export type $EndOfWorkAlarmPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EndOfWorkAlarm"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      active: boolean
+      alarmDate: string | null
+      dismissedDate: string | null
+      revision: number
+    }, ExtArgs["result"]["endOfWorkAlarm"]>
+    composites: {}
+  }
+
+  type EndOfWorkAlarmGetPayload<S extends boolean | null | undefined | EndOfWorkAlarmDefaultArgs> = $Result.GetResult<Prisma.$EndOfWorkAlarmPayload, S>
+
+  type EndOfWorkAlarmCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EndOfWorkAlarmFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EndOfWorkAlarmCountAggregateInputType | true
+    }
+
+  export interface EndOfWorkAlarmDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EndOfWorkAlarm'], meta: { name: 'EndOfWorkAlarm' } }
+    /**
+     * Find zero or one EndOfWorkAlarm that matches the filter.
+     * @param {EndOfWorkAlarmFindUniqueArgs} args - Arguments to find a EndOfWorkAlarm
+     * @example
+     * // Get one EndOfWorkAlarm
+     * const endOfWorkAlarm = await prisma.endOfWorkAlarm.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EndOfWorkAlarmFindUniqueArgs>(args: SelectSubset<T, EndOfWorkAlarmFindUniqueArgs<ExtArgs>>): Prisma__EndOfWorkAlarmClient<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EndOfWorkAlarm that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EndOfWorkAlarmFindUniqueOrThrowArgs} args - Arguments to find a EndOfWorkAlarm
+     * @example
+     * // Get one EndOfWorkAlarm
+     * const endOfWorkAlarm = await prisma.endOfWorkAlarm.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EndOfWorkAlarmFindUniqueOrThrowArgs>(args: SelectSubset<T, EndOfWorkAlarmFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EndOfWorkAlarmClient<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EndOfWorkAlarm that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EndOfWorkAlarmFindFirstArgs} args - Arguments to find a EndOfWorkAlarm
+     * @example
+     * // Get one EndOfWorkAlarm
+     * const endOfWorkAlarm = await prisma.endOfWorkAlarm.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EndOfWorkAlarmFindFirstArgs>(args?: SelectSubset<T, EndOfWorkAlarmFindFirstArgs<ExtArgs>>): Prisma__EndOfWorkAlarmClient<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EndOfWorkAlarm that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EndOfWorkAlarmFindFirstOrThrowArgs} args - Arguments to find a EndOfWorkAlarm
+     * @example
+     * // Get one EndOfWorkAlarm
+     * const endOfWorkAlarm = await prisma.endOfWorkAlarm.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EndOfWorkAlarmFindFirstOrThrowArgs>(args?: SelectSubset<T, EndOfWorkAlarmFindFirstOrThrowArgs<ExtArgs>>): Prisma__EndOfWorkAlarmClient<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EndOfWorkAlarms that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EndOfWorkAlarmFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EndOfWorkAlarms
+     * const endOfWorkAlarms = await prisma.endOfWorkAlarm.findMany()
+     * 
+     * // Get first 10 EndOfWorkAlarms
+     * const endOfWorkAlarms = await prisma.endOfWorkAlarm.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const endOfWorkAlarmWithIdOnly = await prisma.endOfWorkAlarm.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EndOfWorkAlarmFindManyArgs>(args?: SelectSubset<T, EndOfWorkAlarmFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EndOfWorkAlarm.
+     * @param {EndOfWorkAlarmCreateArgs} args - Arguments to create a EndOfWorkAlarm.
+     * @example
+     * // Create one EndOfWorkAlarm
+     * const EndOfWorkAlarm = await prisma.endOfWorkAlarm.create({
+     *   data: {
+     *     // ... data to create a EndOfWorkAlarm
+     *   }
+     * })
+     * 
+     */
+    create<T extends EndOfWorkAlarmCreateArgs>(args: SelectSubset<T, EndOfWorkAlarmCreateArgs<ExtArgs>>): Prisma__EndOfWorkAlarmClient<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EndOfWorkAlarms.
+     * @param {EndOfWorkAlarmCreateManyArgs} args - Arguments to create many EndOfWorkAlarms.
+     * @example
+     * // Create many EndOfWorkAlarms
+     * const endOfWorkAlarm = await prisma.endOfWorkAlarm.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EndOfWorkAlarmCreateManyArgs>(args?: SelectSubset<T, EndOfWorkAlarmCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a EndOfWorkAlarm.
+     * @param {EndOfWorkAlarmDeleteArgs} args - Arguments to delete one EndOfWorkAlarm.
+     * @example
+     * // Delete one EndOfWorkAlarm
+     * const EndOfWorkAlarm = await prisma.endOfWorkAlarm.delete({
+     *   where: {
+     *     // ... filter to delete one EndOfWorkAlarm
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EndOfWorkAlarmDeleteArgs>(args: SelectSubset<T, EndOfWorkAlarmDeleteArgs<ExtArgs>>): Prisma__EndOfWorkAlarmClient<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EndOfWorkAlarm.
+     * @param {EndOfWorkAlarmUpdateArgs} args - Arguments to update one EndOfWorkAlarm.
+     * @example
+     * // Update one EndOfWorkAlarm
+     * const endOfWorkAlarm = await prisma.endOfWorkAlarm.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EndOfWorkAlarmUpdateArgs>(args: SelectSubset<T, EndOfWorkAlarmUpdateArgs<ExtArgs>>): Prisma__EndOfWorkAlarmClient<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EndOfWorkAlarms.
+     * @param {EndOfWorkAlarmDeleteManyArgs} args - Arguments to filter EndOfWorkAlarms to delete.
+     * @example
+     * // Delete a few EndOfWorkAlarms
+     * const { count } = await prisma.endOfWorkAlarm.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EndOfWorkAlarmDeleteManyArgs>(args?: SelectSubset<T, EndOfWorkAlarmDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EndOfWorkAlarms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EndOfWorkAlarmUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EndOfWorkAlarms
+     * const endOfWorkAlarm = await prisma.endOfWorkAlarm.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EndOfWorkAlarmUpdateManyArgs>(args: SelectSubset<T, EndOfWorkAlarmUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one EndOfWorkAlarm.
+     * @param {EndOfWorkAlarmUpsertArgs} args - Arguments to update or create a EndOfWorkAlarm.
+     * @example
+     * // Update or create a EndOfWorkAlarm
+     * const endOfWorkAlarm = await prisma.endOfWorkAlarm.upsert({
+     *   create: {
+     *     // ... data to create a EndOfWorkAlarm
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EndOfWorkAlarm we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EndOfWorkAlarmUpsertArgs>(args: SelectSubset<T, EndOfWorkAlarmUpsertArgs<ExtArgs>>): Prisma__EndOfWorkAlarmClient<$Result.GetResult<Prisma.$EndOfWorkAlarmPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EndOfWorkAlarms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EndOfWorkAlarmCountArgs} args - Arguments to filter EndOfWorkAlarms to count.
+     * @example
+     * // Count the number of EndOfWorkAlarms
+     * const count = await prisma.endOfWorkAlarm.count({
+     *   where: {
+     *     // ... the filter for the EndOfWorkAlarms we want to count
+     *   }
+     * })
+    **/
+    count<T extends EndOfWorkAlarmCountArgs>(
+      args?: Subset<T, EndOfWorkAlarmCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EndOfWorkAlarmCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EndOfWorkAlarm.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EndOfWorkAlarmAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EndOfWorkAlarmAggregateArgs>(args: Subset<T, EndOfWorkAlarmAggregateArgs>): Prisma.PrismaPromise<GetEndOfWorkAlarmAggregateType<T>>
+
+    /**
+     * Group by EndOfWorkAlarm.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EndOfWorkAlarmGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EndOfWorkAlarmGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EndOfWorkAlarmGroupByArgs['orderBy'] }
+        : { orderBy?: EndOfWorkAlarmGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EndOfWorkAlarmGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEndOfWorkAlarmGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EndOfWorkAlarm model
+   */
+  readonly fields: EndOfWorkAlarmFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EndOfWorkAlarm.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EndOfWorkAlarmClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EndOfWorkAlarm model
+   */
+  interface EndOfWorkAlarmFieldRefs {
+    readonly id: FieldRef<"EndOfWorkAlarm", 'Int'>
+    readonly active: FieldRef<"EndOfWorkAlarm", 'Boolean'>
+    readonly alarmDate: FieldRef<"EndOfWorkAlarm", 'String'>
+    readonly dismissedDate: FieldRef<"EndOfWorkAlarm", 'String'>
+    readonly revision: FieldRef<"EndOfWorkAlarm", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EndOfWorkAlarm findUnique
+   */
+  export type EndOfWorkAlarmFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * Filter, which EndOfWorkAlarm to fetch.
+     */
+    where: EndOfWorkAlarmWhereUniqueInput
+  }
+
+  /**
+   * EndOfWorkAlarm findUniqueOrThrow
+   */
+  export type EndOfWorkAlarmFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * Filter, which EndOfWorkAlarm to fetch.
+     */
+    where: EndOfWorkAlarmWhereUniqueInput
+  }
+
+  /**
+   * EndOfWorkAlarm findFirst
+   */
+  export type EndOfWorkAlarmFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * Filter, which EndOfWorkAlarm to fetch.
+     */
+    where?: EndOfWorkAlarmWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EndOfWorkAlarms to fetch.
+     */
+    orderBy?: EndOfWorkAlarmOrderByWithRelationInput | EndOfWorkAlarmOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EndOfWorkAlarms.
+     */
+    cursor?: EndOfWorkAlarmWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EndOfWorkAlarms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EndOfWorkAlarms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EndOfWorkAlarms.
+     */
+    distinct?: EndOfWorkAlarmScalarFieldEnum | EndOfWorkAlarmScalarFieldEnum[]
+  }
+
+  /**
+   * EndOfWorkAlarm findFirstOrThrow
+   */
+  export type EndOfWorkAlarmFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * Filter, which EndOfWorkAlarm to fetch.
+     */
+    where?: EndOfWorkAlarmWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EndOfWorkAlarms to fetch.
+     */
+    orderBy?: EndOfWorkAlarmOrderByWithRelationInput | EndOfWorkAlarmOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EndOfWorkAlarms.
+     */
+    cursor?: EndOfWorkAlarmWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EndOfWorkAlarms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EndOfWorkAlarms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EndOfWorkAlarms.
+     */
+    distinct?: EndOfWorkAlarmScalarFieldEnum | EndOfWorkAlarmScalarFieldEnum[]
+  }
+
+  /**
+   * EndOfWorkAlarm findMany
+   */
+  export type EndOfWorkAlarmFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * Filter, which EndOfWorkAlarms to fetch.
+     */
+    where?: EndOfWorkAlarmWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EndOfWorkAlarms to fetch.
+     */
+    orderBy?: EndOfWorkAlarmOrderByWithRelationInput | EndOfWorkAlarmOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EndOfWorkAlarms.
+     */
+    cursor?: EndOfWorkAlarmWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EndOfWorkAlarms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EndOfWorkAlarms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EndOfWorkAlarms.
+     */
+    distinct?: EndOfWorkAlarmScalarFieldEnum | EndOfWorkAlarmScalarFieldEnum[]
+  }
+
+  /**
+   * EndOfWorkAlarm create
+   */
+  export type EndOfWorkAlarmCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * The data needed to create a EndOfWorkAlarm.
+     */
+    data?: XOR<EndOfWorkAlarmCreateInput, EndOfWorkAlarmUncheckedCreateInput>
+  }
+
+  /**
+   * EndOfWorkAlarm createMany
+   */
+  export type EndOfWorkAlarmCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EndOfWorkAlarms.
+     */
+    data: EndOfWorkAlarmCreateManyInput | EndOfWorkAlarmCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EndOfWorkAlarm update
+   */
+  export type EndOfWorkAlarmUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * The data needed to update a EndOfWorkAlarm.
+     */
+    data: XOR<EndOfWorkAlarmUpdateInput, EndOfWorkAlarmUncheckedUpdateInput>
+    /**
+     * Choose, which EndOfWorkAlarm to update.
+     */
+    where: EndOfWorkAlarmWhereUniqueInput
+  }
+
+  /**
+   * EndOfWorkAlarm updateMany
+   */
+  export type EndOfWorkAlarmUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EndOfWorkAlarms.
+     */
+    data: XOR<EndOfWorkAlarmUpdateManyMutationInput, EndOfWorkAlarmUncheckedUpdateManyInput>
+    /**
+     * Filter which EndOfWorkAlarms to update
+     */
+    where?: EndOfWorkAlarmWhereInput
+    /**
+     * Limit how many EndOfWorkAlarms to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EndOfWorkAlarm upsert
+   */
+  export type EndOfWorkAlarmUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * The filter to search for the EndOfWorkAlarm to update in case it exists.
+     */
+    where: EndOfWorkAlarmWhereUniqueInput
+    /**
+     * In case the EndOfWorkAlarm found by the `where` argument doesn't exist, create a new EndOfWorkAlarm with this data.
+     */
+    create: XOR<EndOfWorkAlarmCreateInput, EndOfWorkAlarmUncheckedCreateInput>
+    /**
+     * In case the EndOfWorkAlarm was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EndOfWorkAlarmUpdateInput, EndOfWorkAlarmUncheckedUpdateInput>
+  }
+
+  /**
+   * EndOfWorkAlarm delete
+   */
+  export type EndOfWorkAlarmDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+    /**
+     * Filter which EndOfWorkAlarm to delete.
+     */
+    where: EndOfWorkAlarmWhereUniqueInput
+  }
+
+  /**
+   * EndOfWorkAlarm deleteMany
+   */
+  export type EndOfWorkAlarmDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EndOfWorkAlarms to delete
+     */
+    where?: EndOfWorkAlarmWhereInput
+    /**
+     * Limit how many EndOfWorkAlarms to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EndOfWorkAlarm without action
+   */
+  export type EndOfWorkAlarmDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EndOfWorkAlarm
+     */
+    select?: EndOfWorkAlarmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EndOfWorkAlarm
+     */
+    omit?: EndOfWorkAlarmOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -4045,6 +5053,17 @@ export namespace Prisma {
   export type AlarmControlScalarFieldEnum = (typeof AlarmControlScalarFieldEnum)[keyof typeof AlarmControlScalarFieldEnum]
 
 
+  export const EndOfWorkAlarmScalarFieldEnum: {
+    id: 'id',
+    active: 'active',
+    alarmDate: 'alarmDate',
+    dismissedDate: 'dismissedDate',
+    revision: 'revision'
+  };
+
+  export type EndOfWorkAlarmScalarFieldEnum = (typeof EndOfWorkAlarmScalarFieldEnum)[keyof typeof EndOfWorkAlarmScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -4085,6 +5104,14 @@ export namespace Prisma {
   };
 
   export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+  export const EndOfWorkAlarmOrderByRelevanceFieldEnum: {
+    alarmDate: 'alarmDate',
+    dismissedDate: 'dismissedDate'
+  };
+
+  export type EndOfWorkAlarmOrderByRelevanceFieldEnum = (typeof EndOfWorkAlarmOrderByRelevanceFieldEnum)[keyof typeof EndOfWorkAlarmOrderByRelevanceFieldEnum]
 
 
   /**
@@ -4366,6 +5393,61 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"AlarmControl"> | Date | string
   }
 
+  export type EndOfWorkAlarmWhereInput = {
+    AND?: EndOfWorkAlarmWhereInput | EndOfWorkAlarmWhereInput[]
+    OR?: EndOfWorkAlarmWhereInput[]
+    NOT?: EndOfWorkAlarmWhereInput | EndOfWorkAlarmWhereInput[]
+    id?: IntFilter<"EndOfWorkAlarm"> | number
+    active?: BoolFilter<"EndOfWorkAlarm"> | boolean
+    alarmDate?: StringNullableFilter<"EndOfWorkAlarm"> | string | null
+    dismissedDate?: StringNullableFilter<"EndOfWorkAlarm"> | string | null
+    revision?: IntFilter<"EndOfWorkAlarm"> | number
+  }
+
+  export type EndOfWorkAlarmOrderByWithRelationInput = {
+    id?: SortOrder
+    active?: SortOrder
+    alarmDate?: SortOrderInput | SortOrder
+    dismissedDate?: SortOrderInput | SortOrder
+    revision?: SortOrder
+    _relevance?: EndOfWorkAlarmOrderByRelevanceInput
+  }
+
+  export type EndOfWorkAlarmWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: EndOfWorkAlarmWhereInput | EndOfWorkAlarmWhereInput[]
+    OR?: EndOfWorkAlarmWhereInput[]
+    NOT?: EndOfWorkAlarmWhereInput | EndOfWorkAlarmWhereInput[]
+    active?: BoolFilter<"EndOfWorkAlarm"> | boolean
+    alarmDate?: StringNullableFilter<"EndOfWorkAlarm"> | string | null
+    dismissedDate?: StringNullableFilter<"EndOfWorkAlarm"> | string | null
+    revision?: IntFilter<"EndOfWorkAlarm"> | number
+  }, "id">
+
+  export type EndOfWorkAlarmOrderByWithAggregationInput = {
+    id?: SortOrder
+    active?: SortOrder
+    alarmDate?: SortOrderInput | SortOrder
+    dismissedDate?: SortOrderInput | SortOrder
+    revision?: SortOrder
+    _count?: EndOfWorkAlarmCountOrderByAggregateInput
+    _avg?: EndOfWorkAlarmAvgOrderByAggregateInput
+    _max?: EndOfWorkAlarmMaxOrderByAggregateInput
+    _min?: EndOfWorkAlarmMinOrderByAggregateInput
+    _sum?: EndOfWorkAlarmSumOrderByAggregateInput
+  }
+
+  export type EndOfWorkAlarmScalarWhereWithAggregatesInput = {
+    AND?: EndOfWorkAlarmScalarWhereWithAggregatesInput | EndOfWorkAlarmScalarWhereWithAggregatesInput[]
+    OR?: EndOfWorkAlarmScalarWhereWithAggregatesInput[]
+    NOT?: EndOfWorkAlarmScalarWhereWithAggregatesInput | EndOfWorkAlarmScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"EndOfWorkAlarm"> | number
+    active?: BoolWithAggregatesFilter<"EndOfWorkAlarm"> | boolean
+    alarmDate?: StringNullableWithAggregatesFilter<"EndOfWorkAlarm"> | string | null
+    dismissedDate?: StringNullableWithAggregatesFilter<"EndOfWorkAlarm"> | string | null
+    revision?: IntWithAggregatesFilter<"EndOfWorkAlarm"> | number
+  }
+
   export type VisitorCreateInput = {
     name: string
     company?: string | null
@@ -4617,6 +5699,62 @@ export namespace Prisma {
     visitorId?: NullableIntFieldUpdateOperationsInput | number | null
     revision?: IntFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EndOfWorkAlarmCreateInput = {
+    id?: number
+    active?: boolean
+    alarmDate?: string | null
+    dismissedDate?: string | null
+    revision?: number
+  }
+
+  export type EndOfWorkAlarmUncheckedCreateInput = {
+    id?: number
+    active?: boolean
+    alarmDate?: string | null
+    dismissedDate?: string | null
+    revision?: number
+  }
+
+  export type EndOfWorkAlarmUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    alarmDate?: NullableStringFieldUpdateOperationsInput | string | null
+    dismissedDate?: NullableStringFieldUpdateOperationsInput | string | null
+    revision?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EndOfWorkAlarmUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    alarmDate?: NullableStringFieldUpdateOperationsInput | string | null
+    dismissedDate?: NullableStringFieldUpdateOperationsInput | string | null
+    revision?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EndOfWorkAlarmCreateManyInput = {
+    id?: number
+    active?: boolean
+    alarmDate?: string | null
+    dismissedDate?: string | null
+    revision?: number
+  }
+
+  export type EndOfWorkAlarmUpdateManyMutationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    alarmDate?: NullableStringFieldUpdateOperationsInput | string | null
+    dismissedDate?: NullableStringFieldUpdateOperationsInput | string | null
+    revision?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EndOfWorkAlarmUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    active?: BoolFieldUpdateOperationsInput | boolean
+    alarmDate?: NullableStringFieldUpdateOperationsInput | string | null
+    dismissedDate?: NullableStringFieldUpdateOperationsInput | string | null
+    revision?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -4973,6 +6111,46 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type EndOfWorkAlarmOrderByRelevanceInput = {
+    fields: EndOfWorkAlarmOrderByRelevanceFieldEnum | EndOfWorkAlarmOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type EndOfWorkAlarmCountOrderByAggregateInput = {
+    id?: SortOrder
+    active?: SortOrder
+    alarmDate?: SortOrder
+    dismissedDate?: SortOrder
+    revision?: SortOrder
+  }
+
+  export type EndOfWorkAlarmAvgOrderByAggregateInput = {
+    id?: SortOrder
+    revision?: SortOrder
+  }
+
+  export type EndOfWorkAlarmMaxOrderByAggregateInput = {
+    id?: SortOrder
+    active?: SortOrder
+    alarmDate?: SortOrder
+    dismissedDate?: SortOrder
+    revision?: SortOrder
+  }
+
+  export type EndOfWorkAlarmMinOrderByAggregateInput = {
+    id?: SortOrder
+    active?: SortOrder
+    alarmDate?: SortOrder
+    dismissedDate?: SortOrder
+    revision?: SortOrder
+  }
+
+  export type EndOfWorkAlarmSumOrderByAggregateInput = {
+    id?: SortOrder
+    revision?: SortOrder
   }
 
   export type StringFieldUpdateOperationsInput = {

@@ -50,6 +50,16 @@ model AlarmControl {
   @@map("alarm_control")
 }
 
+model EndOfWorkAlarm {
+  id            Int     @id @default(1)
+  active        Boolean @default(false)
+  alarmDate     String? @map("alarm_date") @db.VarChar(10)
+  dismissedDate String? @map("dismissed_date") @db.VarChar(10)
+  revision      Int     @default(0)
+
+  @@map("end_of_work_alarm")
+}
+
 enum visitors_status {
   Waiting
   Meeting

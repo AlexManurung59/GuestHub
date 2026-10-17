@@ -11,8 +11,8 @@ import VisitorReminder, {
 } from "@/components/VisitorReminder";
 import "./admin.css";
 import { useRouter } from "next/navigation";
-import ManageUsers from "@/components/ManageUsers";
 import { LanguageSwitcher, useLanguage } from "../language-provider";
+import EndOfWorkReminder from "@/components/EndOfWorkReminder";
 
 type VisitorStatus = "Waiting" | "Meeting" | "Completed" | "Cancelled";
 
@@ -86,7 +86,8 @@ export default function AdminPage() {
   const router = useRouter();
   const { translate } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [alarmMenuControlsTarget, setAlarmMenuControlsTarget] =
+    useState<HTMLDivElement | null>(null);
   const [visitorPanelOpen, setVisitorPanelOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const [visitorAction, setVisitorAction] = useState<
@@ -108,28 +109,13 @@ export default function AdminPage() {
     "SEAFARER" | "GUEST" | ""
   >("");
   const handleExportVisitors = () => {
-  window.location.href = "/api/visitors/export";
-
-  
-async function handleExitAccount() {
-  try {
-    const response = await fetch("/api/auth/logout", {
-      method: "POST",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to log out.");
-    }
-
-    router.replace("/login");
-    router.refresh();
-  } catch (error) {
-    console.error("Logout error:", error);
-    alert("Unable to log out. Please try again.");
-  }
-}
-
-};
+    const downloadLink = document.createElement("a");
+    downloadLink.href = "/api/visitors/export";
+    downloadLink.download = "visitors.xlsx";
+    document.body.append(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+  };
   
   /*
    * Close the floating menu when the user clicks
@@ -497,18 +483,6 @@ async function handleCancelVisitor(visitorId: number) {
     (visitor) => visitor.status === "Completed",
   ).length;
 
-  /*
-   * Open a menu item.
-   *
-   * The actual functionality will be connected
-   * in the following lessons.
-   */
-  function handleMenuClick(menuName: string) {
-    setActiveMenu(menuName);
-
-    // Other floating-menu actions are not connected yet.
-  }
-
   function getStatusClass(status: VisitorStatus) {
     switch (status) {
       case "Waiting":
@@ -550,6 +524,12 @@ async function handleExitAccount() {
 
   return (
     <>
+      <EndOfWorkReminder
+        canControl
+        controlTarget={alarmMenuControlsTarget}
+        showReminderCard={false}
+        showSoundControl={false}
+      />
       <main className="admin-page">
         {/* =========================
             HEADER
@@ -885,7 +865,10 @@ async function handleExitAccount() {
               </button>
             </div>
 
-            <div className="apple-menu-grid">
+            <div
+              className="apple-menu-grid"
+              ref={setAlarmMenuControlsTarget}
+            >
               <button
                 type="button"
                 className="menu-item"
@@ -1502,26 +1485,6 @@ async function handleExitAccount() {
 
   
 )}
-
-      {/* =========================
-          TEMPORARY ACTION INDICATOR
-      ========================== */}
-
-      {activeMenu && (
-        <div className="action-toast">
-          <strong>{activeMenu}</strong>
-
-          <span>This feature will be connected in the next step.</span>
-
-          <button
-            type="button"
-            onClick={() => setActiveMenu(null)}
-            aria-label="Close notification"
-          >
-            ×
-          </button>
-        </div>
-      )}
 
       {/* =========================
           PAGE STYLES

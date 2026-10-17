@@ -250,6 +250,31 @@ Cara diagnosis dan perbaikannya:
 
 Pada fitur renewal ini, yang berubah setiap hari adalah filter daftar berdasarkan tanggal Jakarta, bukan penghapusan atau pengosongan record. Field `created_at` diisi otomatis saat record dibuat, sehingga data lama tetap tersimpan dan bisa diminta lewat `?date=all` atau `?date=YYYY-MM-DD`.
 
+### Pelajaran: alur alarm akhir kerja di Admin, User, dan TV
+
+Fitur ini sengaja memakai satu komponen bersama, `src/components/EndOfWorkReminder.tsx`, tetapi tampilan, kontrol state, dan pemutaran suara adalah tanggung jawab yang berbeda:
+
+- Komponen dipasang di halaman Admin, User, dan TV agar setiap halaman bisa membaca dan mengubah state alarm bersama.
+- Kartu/modal alarm hanya ditampilkan di TV (`showReminderCard`); Admin dan User mengaturnya menjadi `false`.
+- Admin dan User hanya mendapat kontrol **Mulai/Hentikan Alarm** di menu. `showSoundControl={false}` menyembunyikan tombol suara, sedangkan `canPlaySound` tetap `false` secara default. Jadi aksi mereka mengubah state bersama melalui API, bukan memutar audio di browser Admin/User.
+- TV mengaktifkan `canPlaySound` dan menyediakan tombol **Aktifkan Alarm**. Klik pengguna memberi izin browser untuk suara; callback tambahan pada TV juga mengaktifkan audio alarm pengunjung. Browser biasanya menolak pemutaran otomatis sebelum ada interaksi pengguna.
+
+#### Alur data dan penjadwalan
+
+1. `GET /api/end-of-work-alarm` membaca state alarm bersama dari database. `PUT` dengan `action: "activate"` atau `"stop"` mengubahnya. Karena state disimpan di server/database, aksi dari menu Admin/User dapat dilihat oleh TV.
+2. `EndOfWorkReminder` mengambil state awal lalu melakukan polling setiap 5 detik. Interval dan timeout dibersihkan saat komponen dilepas; `requestInProgressRef` mencegah pemeriksaan jadwal yang tumpang tindih.
+3. Pemeriksaan jadwal menggunakan `Intl.DateTimeFormat` dengan `timeZone: "Asia/Jakarta"` dan hanya mengaktifkan alarm pada Senin–Jumat. Waktu pemicu saat ini adalah **20.00 WIB**; ubah kondisi `afterWorkTime` di komponen untuk mengganti jam.
+4. `alarmDate` menandai tanggal alarm diaktifkan, sedangkan `dismissedDate` mencegah alarm yang dihentikan aktif lagi pada tanggal yang sama. Keduanya berbeda dari state UI lokal React.
+5. Saat alarm aktif, hanya instance TV yang boleh memutar `/sounds/home.mp3`. Event `ended` menghentikan state alarm bersama setelah file selesai.
+
+#### Cara men-debug perubahan lintas halaman
+
+- Cari semua tempat `<EndOfWorkReminder />` dirender, lalu periksa props per halaman. Jangan mengandalkan lokasi komponen saja untuk membatasi efek samping; gate audio secara eksplisit dengan `canPlaySound`.
+- Pisahkan perubahan state server (`fetch` API) dari efek browser (`audio.play()` / `audio.pause()`). Admin/User boleh mengubah state tanpa memutar audio lokal.
+- `play()` mengembalikan Promise. Browser dapat menolaknya jika pemutaran dihentikan oleh `pause()` sebelum proses mulai (`AbortError`). Hindari memulai playback berulang pada setiap render/poll, dan tangani pembatalan yang memang disengaja secara terpisah dari kegagalan audio yang sebenarnya.
+- Setelah mengubah jadwal, periksa juga teks jam pada kartu/modal agar cocok dengan kondisi `afterWorkTime`. Saat ini teks tampilan masih menyebut **17.00 WIB**, sedangkan kondisi pemicu adalah **20.00 WIB**.
+- Verifikasi dengan ESLint dan `tsc --noEmit`, lalu uji alur manual: klik aktifkan suara di TV, mulai/hentikan alarm dari Admin atau User, dan pastikan suara hanya terdengar di TV.
+
 ## 10. Prioritas Pengembangan Berikutnya
 
 Jika project akan dikembangkan lebih lanjut, area yang paling penting adalah:

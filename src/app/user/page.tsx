@@ -10,6 +10,7 @@ import "../admin/admin.css";
 import { useRouter } from "next/navigation";
 import "./user.css";
 import { LanguageSwitcher, useLanguage } from "../language-provider";
+import EndOfWorkReminder from "@/components/EndOfWorkReminder";
 
 type VisitorStatus = "Waiting" | "Meeting" | "Completed" | "Cancelled";
 type VisitorAction = "add" | "cancel" | "status" | null;
@@ -103,6 +104,8 @@ export default function UserPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [alarmMenuControlsTarget, setAlarmMenuControlsTarget] =
+    useState<HTMLDivElement | null>(null);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [visitorPanelOpen, setVisitorPanelOpen] = useState(false);
   const [visitorAction, setVisitorAction] = useState<VisitorAction>(null);
@@ -456,6 +459,12 @@ async function handleExitAccount() {
 
   return (
     <>
+      <EndOfWorkReminder
+        canControl
+        controlTarget={alarmMenuControlsTarget}
+        showReminderCard={false}
+        showSoundControl={false}
+      />
       <main className="admin-page">
         <section className="container-fluid admin-container">
           <header className="dashboard-header">
@@ -712,7 +721,10 @@ async function handleExitAccount() {
               </button>
             </div>
 
-            <div className="apple-menu-grid user-menu-grid">
+            <div
+              className="apple-menu-grid user-menu-grid"
+              ref={setAlarmMenuControlsTarget}
+            >
               <button
                 type="button"
                 className="menu-item"

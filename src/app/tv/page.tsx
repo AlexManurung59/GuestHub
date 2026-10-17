@@ -9,6 +9,7 @@ import {
 } from "@/components/VisitorReminder";
 import { LanguageSwitcher, useLanguage } from "../language-provider";
 import "../admin/admin.css";
+import EndOfWorkReminder from "@/components/EndOfWorkReminder";
 
 
 // =========================================================
@@ -32,6 +33,15 @@ interface Visitor {
   createdAt: string;
 }
 
+function isPlaybackInterrupted(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "name" in error &&
+    error.name === "AbortError"
+  );
+}
+
 // =========================================================
 // TV PAGE
 // =========================================================
@@ -40,6 +50,10 @@ export default function TvPage() {
   const router = useRouter();
   const { language, translate } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [alarmMenuControlsTarget, setAlarmMenuControlsTarget] =
+    useState<HTMLDivElement | null>(null);
+  const [visitorAlarmSoundTarget, setVisitorAlarmSoundTarget] =
+    useState<HTMLDivElement | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -195,18 +209,19 @@ export default function TvPage() {
     const alarmAudio = alarmAudioRef.current;
 
     if (alarmIsActive && alarmEnabled && alarmAudio) {
+      if (!alarmAudio.paused) return;
+
       alarmAudio.currentTime = 0;
-      alarmAudio.play().catch((error) => {
+      void alarmAudio.play().catch((error: unknown) => {
+        if (isPlaybackInterrupted(error)) return;
         console.error("Unable to play alarm:", error);
       });
     } else if (alarmAudio) {
-      alarmAudio.pause();
-      alarmAudio.currentTime = 0;
+      if (!alarmAudio.paused) {
+        alarmAudio.pause();
+        alarmAudio.currentTime = 0;
+      }
     }
-
-    return () => {
-      alarmAudio?.pause();
-    };
   }, [alarmIsActive, alarmEnabled]);
 
   useEffect(() => {
@@ -263,6 +278,8 @@ export default function TvPage() {
   // =========================================================
 
   const enableAlarm = async () => {
+    if (alarmEnabled) return;
+
     const alarmAudio = new Audio("/sounds/horn.mp3");
     alarmAudio.loop = true;
     alarmAudio.muted = true;
@@ -276,10 +293,9 @@ export default function TvPage() {
       setAlarmEnabled(true);
     } catch (error) {
       alarmAudioRef.current = null;
-      console.error(
-        "Unable to enable alarm:",
-        error
-      );
+      if (isPlaybackInterrupted(error)) return;
+      console.error("Unable to enable visitor alarm:", error);
+      throw error;
     }
   };
 
@@ -411,6 +427,14 @@ export default function TvPage() {
 
   return (
     <main className="tv-main d-flex flex-column align-items-center py-5">
+      <EndOfWorkReminder
+        canControl
+        controlTarget={alarmMenuControlsTarget}
+        soundControlTarget={visitorAlarmSoundTarget}
+        onEnableAdditionalSound={enableAlarm}
+        canPlaySound
+        showReminderCard
+      />
       <div className="container-fluid px-5">
 
         {/* =====================================================
@@ -477,19 +501,12 @@ export default function TvPage() {
 
         {!alarmEnabled && (
           <div className="alarm-enable-wrapper">
-
-            <button
-              type="button"
-              className="alarm-enable-button"
-              onClick={enableAlarm}
-            >
-              🔔 {translate("Aktifkan Alarm Pengunjung", "Enable Visitor Alarm")}
-            </button>
+            <div ref={setVisitorAlarmSoundTarget} />
 
             <p className="alarm-help-text">
               {translate(
-                "Klik tombol ini sekali untuk mengaktifkan suara TV.",
-                "Click this button once to enable sound on the TV.",
+                "Klik tombol ini sekali untuk mengaktifkan suara alarm pengunjung dan pengingat pulang.",
+                "Click this button once to enable visitor and end-of-work alarm sounds.",
               )}
             </p>
 
@@ -779,7 +796,10 @@ export default function TvPage() {
               </button>
             </div>
 
-            <div className="apple-menu-grid">
+            <div
+              className="apple-menu-grid"
+              ref={setAlarmMenuControlsTarget}
+            >
               <button
                 type="button"
                 className="menu-item"

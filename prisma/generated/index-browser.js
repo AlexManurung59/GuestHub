@@ -157,6 +157,14 @@ exports.Prisma.AlarmControlScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EndOfWorkAlarmScalarFieldEnum = {
+  id: 'id',
+  active: 'active',
+  alarmDate: 'alarmDate',
+  dismissedDate: 'dismissedDate',
+  revision: 'revision'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -186,6 +194,11 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   name: 'name',
   role: 'role'
 };
+
+exports.Prisma.EndOfWorkAlarmOrderByRelevanceFieldEnum = {
+  alarmDate: 'alarmDate',
+  dismissedDate: 'dismissedDate'
+};
 exports.visitors_status = exports.$Enums.visitors_status = {
   Waiting: 'Waiting',
   Meeting: 'Meeting',
@@ -196,7 +209,8 @@ exports.visitors_status = exports.$Enums.visitors_status = {
 exports.Prisma.ModelName = {
   Visitor: 'Visitor',
   User: 'User',
-  AlarmControl: 'AlarmControl'
+  AlarmControl: 'AlarmControl',
+  EndOfWorkAlarm: 'EndOfWorkAlarm'
 };
 
 /**
