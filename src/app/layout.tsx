@@ -23,7 +23,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="id" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body suppressHydrationWarning>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          {children}
+          <footer className="site-footer">
+            © 2026 Create by Seaps. All Rights Reserved.
+          </footer>
+        </LanguageProvider>
       </body>
     </html>
   );
