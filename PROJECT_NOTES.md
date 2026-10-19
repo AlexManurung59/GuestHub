@@ -85,6 +85,20 @@ Field utama visitor adalah `id`, `name`, `company`, `phone`, `purpose`, `divisio
 
 Jika struktur visitor diubah, cek semua penggunaan tipe ini di komponen, data, dan halaman.
 
+### Floating menu pada halaman Admin, User, dan TV
+
+Menu mengambang terdapat di `src/app/admin/page.tsx`, `src/app/user/page.tsx`, dan `src/app/tv/page.tsx`. Tombol menu dapat dipindahkan dengan pointer, sedangkan panel menyesuaikan arah buka agar menjauhi tepi layar.
+
+Cara kerjanya:
+
+- `menuPosition` menyimpan koordinat kiri-atas tombol. Posisi awal berada dekat sudut kanan bawah, dan event `resize` menjaga tombol tetap berada dalam viewport.
+- Arah panel ditentukan dengan membandingkan pusat tombol dengan titik tengah viewport. Jika tombol ada di separuh kiri, panel membuka ke kanan; jika ada di separuh atas, panel membuka ke bawah. Di separuh kanan atau bawah, arah tersebut dibalik.
+- Class `menu-open-right`, `menu-open-left`, `menu-open-down`, dan `menu-open-up` mengatur sisi panel melalui CSS di `src/app/admin/admin.css`.
+- `maxWidth` dan `maxHeight` inline membatasi panel sesuai ruang yang tersedia. `overflowY: "auto"` memungkinkan isi panel digulir jika ruang vertikal terbatas.
+- Pointer handlers membedakan klik dari drag. Pergerakan lebih dari 4 piksel dianggap drag, lalu klik setelah drag ditekan agar panel tidak langsung terbuka atau tertutup.
+
+Jika mengubah perilaku menu, terapkan perubahan secara konsisten pada ketiga halaman tersebut. Jika implementasi perlu digunakan lebih banyak halaman, pertimbangkan mengekstrak logika state dan pointer ke satu komponen bersama agar tidak berbeda antarhalaman.
+
 ## 3. Alur Registrasi
 
 File utama: `src/app/register/page.tsx`
