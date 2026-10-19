@@ -50,7 +50,7 @@ export default function RegisterPage() {
   function updateVisitor(field: keyof RegistrationVisitor, value: string) {
     setVisitor((current) => ({
       ...current,
-      [field]: field === "purpose" ? value : value.toUpperCase(),
+      [field]: value,
     }));
     setSubmitted(false);
     setShowError(false);
@@ -88,17 +88,18 @@ export default function RegisterPage() {
           "Content-Type":"application/json",
         },
         body: JSON.stringify({
-          name: visitor.name,
-          company: visitorType === "GUEST" ? visitor.company : null,
-          phone: visitor.phone,
+          name: visitor.name.toUpperCase(),
+          company:
+            visitorType === "GUEST" ? visitor.company.toUpperCase() : null,
+          phone: visitor.phone.toUpperCase(),
           purpose: visitor.purpose.toUpperCase(),
-          division: visitor.division,
-          pic: visitor.pic,
+          division: visitor.division.toUpperCase(),
+          pic: visitor.pic.toUpperCase(),
           visitorType,
-          rank: visitorType === "SEAFARER" ? visitor.rank : null,
+          rank: visitorType === "SEAFARER" ? visitor.rank.toUpperCase() : null,
           position:
             visitorType === "GUEST" || visitor.rank === "OTHERS"
-              ? visitor.position
+              ? visitor.position.toUpperCase()
               : null,
         }),
       });
@@ -187,6 +188,7 @@ console.log("Visitor Successfully created:",data);
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     updateVisitor("name", e.target.value)
                   }
+                  style={{ textTransform: "uppercase" }}
                   placeholder={t("fullNamePlaceholder")}
                   required
                 />
@@ -255,6 +257,7 @@ console.log("Visitor Successfully created:",data);
                     onChange={(event: ChangeEvent<HTMLInputElement>) =>
                       updateVisitor("company", event.target.value)
                     }
+                    style={{ textTransform: "uppercase" }}
                     placeholder={t("companyPlaceholder")}
                     required
                   />
@@ -305,6 +308,7 @@ console.log("Visitor Successfully created:",data);
                     onChange={(event) =>
                       updateVisitor("position", event.target.value)
                     }
+                    style={{ textTransform: "uppercase" }}
                     placeholder={t("positionPlaceholder")}
                     required
                   />
@@ -338,6 +342,7 @@ console.log("Visitor Successfully created:",data);
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     updateVisitor("phone", e.target.value)
                   }
+                  style={{ textTransform: "uppercase" }}
                   placeholder={t("phonePlaceholder")}
                   required
                 />
