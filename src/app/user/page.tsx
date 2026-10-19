@@ -121,6 +121,123 @@ export default function UserPage() {
   const [alarmActionLoading, setAlarmActionLoading] = useState(false);
   const [alarmControlError, setAlarmControlError] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+  const menuOpensRight =
+    viewportSize.width > 0 &&
+    menuPosition.x + 32 < viewportSize.width / 2;
+  const menuOpensDown =
+    viewportSize.height > 0 &&
+    menuPosition.y + 32 < viewportSize.height / 2;
+  const menuPanelMaxWidth =
+    viewportSize.width > 0
+      ? Math.max(
+          0,
+          Math.min(
+            420,
+            viewportSize.width - 40,
+            menuOpensRight
+              ? viewportSize.width - menuPosition.x - 12
+              : menuPosition.x + 64 - 12,
+          ),
+        )
+      : undefined;
+  const menuPanelMaxHeight =
+    viewportSize.height > 0
+      ? Math.max(
+          0,
+          menuOpensDown
+            ? viewportSize.height - menuPosition.y - 94
+            : menuPosition.y - 30,
+        )
+      : undefined;
+  const dragStartRef = useRef<{
+    pointerX: number;
+    pointerY: number;
+    startX: number;
+    startY: number;
+  } | null>(null);
+  const didDragRef = useRef(false);
+  const suppressClickRef = useRef(false);
+
+  useEffect(() => {
+    const updateInitialPosition = () => {
+      setMenuPosition({
+        x: Math.max(12, window.innerWidth - 76),
+        y: Math.max(12, window.innerHeight - 100),
+      });
+    };
+    const updateViewportSize = () => {
+      setViewportSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+      setMenuPosition((current) => ({
+        x: Math.max(0, Math.min(window.innerWidth - 60, current.x)),
+        y: Math.max(0, Math.min(window.innerHeight - 60, current.y)),
+      }));
+    };
+
+    updateInitialPosition();
+    updateViewportSize();
+    window.addEventListener("resize", updateViewportSize);
+
+    return () => {
+      window.removeEventListener("resize", updateViewportSize);
+    };
+  }, []);
+
+  const handleMenuPointerDown = (
+    event: React.PointerEvent<HTMLButtonElement>,
+  ) => {
+    if (event.button !== 0 && event.pointerType === "mouse") {
+      return;
+    }
+    dragStartRef.current = {
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      startX: menuPosition.x,
+      startY: menuPosition.y,
+    };
+    didDragRef.current = false;
+    suppressClickRef.current = false;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleMenuPointerMove = (
+    event: React.PointerEvent<HTMLButtonElement>,
+  ) => {
+    const start = dragStartRef.current;
+    if (!start) {
+      return;
+    }
+    const deltaX = event.clientX - start.pointerX;
+    const deltaY = event.clientY - start.pointerY;
+
+    if (Math.abs(deltaX) > 4 || Math.abs(deltaY) > 4) {
+      didDragRef.current = true;
+    }
+    if (!didDragRef.current) {
+      return;
+    }
+
+    const buttonSize = 60;
+    setMenuPosition({
+      x: Math.max(
+        0,
+        Math.min(window.innerWidth - buttonSize, start.startX + deltaX),
+      ),
+      y: Math.max(
+        0,
+        Math.min(window.innerHeight - buttonSize, start.startY + deltaY),
+      ),
+    });
+  };
+
+  const handleMenuPointerUp = () => {
+    suppressClickRef.current = didDragRef.current;
+    dragStartRef.current = null;
+  };
 
   const loadVisitors = useCallback(async () => {
     try {
@@ -703,9 +820,27 @@ async function handleExitAccount() {
       <div
         ref={menuRef}
         className={`floating-menu-wrapper ${menuOpen ? "menu-is-open" : ""}`}
+        style={{
+          position: "fixed",
+          left: menuPosition.x,
+          top: menuPosition.y,
+          right: "auto",
+          bottom: "auto",
+          zIndex: 2000,
+        }}
       >
         {menuOpen && (
-          <nav className="apple-menu-panel" aria-label="User menu">
+          <nav
+            className={`apple-menu-panel ${
+              menuOpensRight ? "menu-open-right" : "menu-open-left"
+            } ${menuOpensDown ? "menu-open-down" : "menu-open-up"}`}
+            aria-label="User menu"
+            style={{
+              maxWidth: menuPanelMaxWidth,
+              maxHeight: menuPanelMaxHeight,
+              overflowY: "auto",
+            }}
+          >
             <div className="apple-menu-header">
               <div>
                 <span>{translate("Menu Pengguna", "User Menu")}</span>
@@ -781,9 +916,25 @@ async function handleExitAccount() {
           className={`floating-menu-button ${
             menuOpen ? "floating-menu-button-open" : ""
           }`}
-          onClick={() => setMenuOpen((current) => !current)}
+          onPointerDown={handleMenuPointerDown}
+          onPointerMove={handleMenuPointerMove}
+          onPointerUp={handleMenuPointerUp}
+          onPointerCancel={handleMenuPointerUp}
+          onClick={() => {
+            if (suppressClickRef.current) {
+              suppressClickRef.current = false;
+              return;
+            }
+
+            setMenuOpen((current) => !current);
+          }}
           aria-label={translate("Buka menu pengguna", "Open user menu")}
           aria-expanded={menuOpen}
+          style={{
+            touchAction: "none",
+            cursor: "grab",
+            userSelect: "none",
+          }}
         >
           {menuOpen ? "×" : "☰"}
         </button>

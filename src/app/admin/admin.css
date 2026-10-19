@@ -823,6 +823,26 @@
   animation: menuAppear 0.22s ease-out;
 }
 
+.apple-menu-panel.menu-open-right {
+  left: 0;
+  right: auto;
+}
+
+.apple-menu-panel.menu-open-left {
+  left: auto;
+  right: 0;
+}
+
+.apple-menu-panel.menu-open-down {
+  top: 82px;
+  bottom: auto;
+}
+
+.apple-menu-panel.menu-open-up {
+  top: auto;
+  bottom: 82px;
+}
+
 @keyframes menuAppear {
   from {
     opacity: 0;
