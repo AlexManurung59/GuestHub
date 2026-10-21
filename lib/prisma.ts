@@ -15,6 +15,10 @@ const adapter = new PrismaMariaDb({
   user: dbUrl.username || "root",
   password: dbUrl.password || "",
   database: dbUrl.pathname.replace(/^\//, "") || undefined,
+  connectionLimit: 5,
+  minimumIdle: 1,
+  idleTimeout: 30,
+  connectTimeout: 5000,
 });
 
 const globalForPrisma = globalThis as unknown as {
@@ -24,8 +28,6 @@ const globalForPrisma = globalThis as unknown as {
 const prisma =
   globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+globalForPrisma.prisma = prisma;
 
-export{prisma}
+export { prisma };

@@ -11,7 +11,6 @@ import VisitorReminder, {
 } from "@/components/VisitorReminder";
 import "./admin.css";
 import { useRouter } from "next/navigation";
-import type { PointerEvent } from "react";
 import { LanguageSwitcher, useLanguage } from "../language-provider";
 import EndOfWorkReminder from "@/components/EndOfWorkReminder";
 
