@@ -42,7 +42,7 @@ export const scrollRank = [
 ]
 
 export const scrollPIC = [
-    "HARNIFIRA",
+    "HARFINIRA",
     "DWI LAVENIA",
     "ALMUKAROM",
     "DWI DAVID",

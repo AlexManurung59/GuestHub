@@ -66,3 +66,36 @@ enum visitors_status {
   Completed
   Cancelled
 }
+
+enum MusicItemType{
+  VIDEO
+  PLAYLIST
+}
+
+modelMusicItem{
+  id Int @id @default(autoincrement())
+  title String @db.VarChar(150)
+  type MusicItemType
+  youtubeId String @map("youtube_Id") @db.VarChar(100)
+  url String @db.VarChar(500)
+  isActive Boolean @default(true) @map("is_active")
+  sortOrder Int @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  playbacks MusicPlayback[]
+
+  @@map("music_items")
+}
+
+model MusicPlayback{
+  id Int @id @default(1)
+  currentItemId Int? @("current_item_id")
+  isPlaying Boolean @default(false)@map("is_playing")
+  currentTimeSeconds Float @default(0) @map("current_time_seconds")
+  revision Int @default(0)
+  updatedAt DateTime @updatedAt @map("updated_at)
+
+  currentItem MusicItem? @relation(fields:[currentItemId],references:[id],onDelete:SetNull)
+  @@map("music_playback")
+}
